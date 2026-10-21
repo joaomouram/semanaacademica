@@ -68,7 +68,6 @@ ol{padding-left:22px;margin:0}li.me{font-weight:800}
     <h2>Como jogar</h2>
     <p>Arraste o item até a lixeira certa. Também dá para tocar na lixeira ou usar as teclas numéricas. Três níveis: recicláveis, orgânicos e, por fim, rejeitos e resíduos perigosos.</p>
     <p>As cores seguem o padrão CONAMA. Confira sempre as regras de coleta do seu município.</p>
-    <p><small>Versão 4: ranking da turma.</small></p>
   </div>
 </section>
 
@@ -253,14 +252,14 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 async function online(eu){
   const base=CFG.url.replace(/\/$/,"")+"/rest/v1/scores";
   const h={apikey:CFG.key,"Content-Type":"application/json"};
-  $("#rh").textContent="Ranking da turma (carregando...)";
+  $("#rh").textContent="Ranking (carregando...)";
   try{
     await fetch(base,{method:"POST",headers:{...h,Prefer:"return=minimal"},body:JSON.stringify({name:eu.n,score:eu.s})});
     const res=await fetch(base+"?select=name,score&order=score.desc&limit=10",{headers:h});
     if(!res.ok)throw new Error("falha");
     const d=await res.json();let marcado=false;
     $("#er").innerHTML=d.map(x=>{const me=!marcado&&x.name===eu.n&&x.score===eu.s;if(me)marcado=true;return `<li class="${me?"me":""}">${esc(x.name)}: ${x.score} pts</li>`}).join("");
-    $("#rh").textContent="Ranking da turma";
+    $("#rh").textContent="Ranking";
   }catch(e){$("#rh").textContent="Sem conexão. Ranking deste aparelho"}
 }
 $("#go").onclick=start;
