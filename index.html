@@ -248,7 +248,7 @@ card.addEventListener("pointerdown",e=>{
 });
 // RANKING ONLINE (Supabase): cole aqui a URL do projeto e a chave pública (anon/publishable).
 // Deixe vazio para usar só o ranking local deste aparelho. Nunca use a chave secreta (service_role).
-const CFG={url:"iwpqgdjnhuwxdafortyh",key:"sb_publishable_IsVvmV1lnKalX13V1X_SOA_6v0734Xx"};
+const CFG={url:"https://iwpqgdjnhuwxdafortyh.supabase.co",key:"sb_publishable_IsVvmV1lnKalX13V1X_SOA_6v0734Xx"};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 async function online(eu){
   const base=CFG.url.replace(/\/$/,"")+"/rest/v1/scores";
