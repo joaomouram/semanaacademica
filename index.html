@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lixo no lugar certo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap">
+<style>
+:root{--bg:#e8eef0;--card:#fff;--ink:#17262b;--mut:#51646b;--line:#c9d6da;--ok:#1f8a4c;--bad:#c62f2a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#162124;--card:#212e32;--ink:#e8f0f2;--mut:#9db2b9;--line:#34454a;--ok:#4cc27f;--bad:#ff7a73}}
+:root[data-theme="dark"]{--bg:#162124;--card:#212e32;--ink:#e8f0f2;--mut:#9db2b9;--line:#34454a;--ok:#4cc27f;--bad:#ff7a73}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:500;line-height:1.45}
+main{max-width:560px;margin:0 auto;padding:20px 16px 32px}
+h1{font-size:2.3rem;line-height:1.05;font-weight:800;margin:0 0 8px;letter-spacing:-.02em}
+h2{font-size:1.2rem;margin:20px 0 8px;font-weight:700}
+p{margin:0 0 12px;color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;font-weight:700}
+.hud span{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-size:.95rem}
+#hh{color:var(--bad)}
+.item{text-align:center;padding:22px 16px 18px}
+.emo{font-size:5rem;line-height:1.1}
+#card{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+#card.drag{cursor:grabbing;position:relative;z-index:5;box-shadow:0 16px 32px rgba(0,0,0,.28)}
+.bin.hot{transform:scale(1.1);filter:drop-shadow(0 0 7px var(--ink))}
+@media (max-height:700px){.emo{font-size:3.6rem}.item{padding:14px 12px}}
+.nm{font-size:1.5rem;font-weight:800;margin-top:6px}
+.bar{height:10px;background:var(--line);border-radius:9px;margin-top:16px;overflow:hidden}
+.bar i{display:block;height:100%;width:100%;background:var(--ok);transition:width .1s linear,background .3s}
+#fb{min-height:84px;margin:12px 0;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card)}
+#fb b{display:block;font-size:1.05rem}
+#fb.ok b{color:var(--ok)}#fb.bad b{color:var(--bad)}
+#bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:6px 8px}
+.bin{font:inherit;border:0;padding:0;margin-top:4px;background:none;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;transition:transform .15s,filter .15s}
+.bin svg{width:100%;max-width:84px;height:auto;display:block;overflow:visible}
+.bin .lidg{transform-box:view-box;transform-origin:92px 24px;transition:transform .18s}
+.bin.hot .lidg{transform:rotate(-24deg)}
+.bin .lb{font-weight:700;font-size:.82rem;line-height:1.2;margin-top:2px}
+.bin .lb small{display:inline-block;min-width:1.4em;background:var(--line);border-radius:99px;margin-right:3px;opacity:1;font-weight:700}
+.bin small{font-weight:500;opacity:.8}
+.bin:active{transform:translateY(2px)}
+.bin:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.btn{font:inherit;font-weight:800;font-size:1.05rem;border:0;border-radius:12px;padding:12px 22px;background:var(--ink);color:var(--bg);cursor:pointer;margin-top:8px}
+input{font:inherit;width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);margin:4px 0 8px}
+.stats{display:flex;gap:10px;margin:12px 0}
+.stats div{flex:1;background:var(--bg);border-radius:12px;padding:10px;text-align:center}
+.stats b{display:block;font-size:1.5rem}
+.tag{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 12px;margin:0 6px 6px 0;font-size:.92rem}
+ol{padding-left:22px;margin:0}li.me{font-weight:800}
+.shake{animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ghost{position:fixed;z-index:50;pointer-events:none;font-size:4rem;line-height:1;transform:translate(-50%,-60%) rotate(-6deg);filter:drop-shadow(0 10px 12px rgba(0,0,0,.3))}
+@media (prefers-reduced-motion:reduce){.shake{animation:none}.bar i,.bin .lidg{transition:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<section id="s0">
+  <h1>Lixo no lugar certo</h1>
+  <p>Escolha a lixeira correta antes que o tempo acabe. Acertos em sequência multiplicam os pontos, e cada erro custa uma vida.</p>
+  <div class="card">
+    <label for="nm0"><b>Seu nome para o ranking</b></label>
+    <input id="nm0" maxlength="14" placeholder="Aluno" autocomplete="off">
+    <button class="btn" id="go">Começar</button>
+    <h2>Como jogar</h2>
+    <p>Arraste o item até a lixeira certa. Também dá para tocar na lixeira ou usar as teclas numéricas. Três níveis: recicláveis, orgânicos e, por fim, rejeitos e resíduos perigosos.</p>
+    <p>As cores seguem o padrão CONAMA. Confira sempre as regras de coleta do seu município.</p>
+    <p><small>Versão 4: ranking da turma.</small></p>
+  </div>
+</section>
+
+<section id="s1" hidden>
+  <div class="hud"><span id="hl"></span><span id="hh"></span><span id="hs"></span><span id="hc"></span></div>
+  <div class="card item" id="card">
+    <div class="emo" id="emo" aria-hidden="true"></div>
+    <div class="nm" id="inm"></div>
+    <div class="bar"><i id="tb"></i></div>
+  </div>
+  <div id="fb" aria-live="polite"><span style="color:var(--mut)">Arraste o item até a lixeira certa.</span></div>
+  <div id="bins"></div>
+</section>
+
+<section id="s2" hidden>
+  <h1 id="et"></h1>
+  <div class="card">
+    <div class="stats">
+      <div><b id="e1"></b>pontos</div><div><b id="e2"></b>acertos</div><div><b id="e3"></b>maior sequência</div>
+    </div>
+    <h2>Conquistas</h2><div id="eb"></div>
+    <h2>Onde você mais erra</h2><div id="ee"></div>
+    <h2 id="rh">Ranking</h2><ol id="er"></ol>
+    <button class="btn" id="again">Jogar de novo</button>
+  </div>
+</section>
+</main>
+
+<script>
+const BINS={papel:{n:"Papel",c:"#1d6fd1",t:"#fff"},plastico:{n:"Plástico",c:"#d6322e",t:"#fff"},vidro:{n:"Vidro",c:"#1f8a4c",t:"#fff"},metal:{n:"Metal",c:"#f2b705",t:"#1b1f23"},organico:{n:"Orgânico",c:"#7a4b2a",t:"#fff"},rejeito:{n:"Rejeito",c:"#5f6b74",t:"#fff"},perigoso:{n:"Perigoso",c:"#ee7d11",t:"#1b1f23"}};
+const LV=[
+ {cats:["papel","plastico","vidro","metal"],time:9},
+ {cats:["papel","plastico","vidro","metal","organico"],time:7},
+ {cats:["papel","plastico","vidro","metal","organico","rejeito","perigoso"],time:6}];
+const ITEMS=[
+["📰","Jornal velho","papel",0,"Papel limpo e seco vai na lixeira azul."],
+["📦","Caixa de papelão","papel",0,"Desmonte a caixa para ocupar menos espaço."],
+["🧴","Garrafa PET","plastico",0,"Esvazie e amasse antes de descartar."],
+["🥤","Copo plástico","plastico",0,"Plásticos rígidos são recicláveis."],
+["🍾","Garrafa de vidro","vidro",0,"Vidro vai na verde. Embale bem se estiver quebrado."],
+["🫙","Pote de conserva","vidro",0,"Lave e retire a tampa de metal."],
+["🥫","Lata de refrigerante","metal",0,"O alumínio tem alto valor de reciclagem."],
+["🥫","Lata de atum","metal",0,"Enxágue para tirar os resíduos."],
+["🍌","Casca de banana","organico",1,"Restos de comida viram adubo na compostagem."],
+["☕","Borra de café","organico",1,"Ótima para compostagem."],
+["🥚","Casca de ovo","organico",1,"Orgânico: decompõe e vira adubo."],
+["🍎","Miolo de maçã","organico",1,"Restos de frutas são orgânicos."],
+["🛍️","Sacola plástica","plastico",1,"Sacolas limpas e secas podem ser recicladas."],
+["📄","Folha de caderno","papel",1,"Papel de escrita é reciclável."],
+["🔋","Pilha usada","perigoso",2,"Contém metais pesados. Leve a um ponto de coleta."],
+["💡","Lâmpada fluorescente","perigoso",2,"Contém mercúrio e nunca vai no lixo comum."],
+["📱","Celular velho","perigoso",2,"Lixo eletrônico tem pontos de coleta próprios."],
+["🧻","Papel higiênico usado","rejeito",2,"Contaminado: vai para o rejeito."],
+["🚬","Bituca de cigarro","rejeito",2,"Não é reciclável: rejeito."],
+["🪞","Espelho quebrado","rejeito",2,"Espelho não é reciclado junto com o vidro comum."],
+["🧽","Esponja de cozinha","rejeito",2,"Não é reciclável: rejeito."],
+["🔌","Carregador quebrado","perigoso",2,"Eletrônicos e cabos vão para a coleta de eletrônicos."]];
+const $=s=>document.querySelector(s);
+const sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+let S,timer;
+
+const ICON={papel:"📄",plastico:"🧴",vidro:"🍾",metal:"🥫",organico:"🍎",rejeito:"🚫",perigoso:"⚠️"};
+function can(k){const c=BINS[k].c;
+ return `<svg viewBox="0 0 100 124" aria-hidden="true"><ellipse cx="50" cy="119" rx="38" ry="4" fill="#000" opacity=".15"/><rect x="20" y="97" width="60" height="6" rx="3" fill="${c}"/><rect x="20" y="97" width="60" height="6" rx="3" fill="#000" opacity=".25"/><path d="M14 30H86L80 99H20Z" fill="${c}"/><path d="M14 30H26L32 99H20Z" fill="#fff" opacity=".18"/><path d="M74 30H86L80 99H68Z" fill="#000" opacity=".18"/><path d="M40 38V92M60 38V92" stroke="#000" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="64" r="19" fill="#fff" opacity=".94"/><text x="50" y="72" font-size="23" text-anchor="middle">${ICON[k]}</text><g class="lidg"><rect x="8" y="17" width="84" height="13" rx="6" fill="${c}"/><rect x="8" y="17" width="84" height="13" rx="6" fill="#000" opacity=".2"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="${c}"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="#000" opacity=".2"/></g><circle cx="28" cy="110" r="9" fill="#2b3236"/><circle cx="72" cy="110" r="9" fill="#2b3236"/><circle cx="28" cy="110" r="3.5" fill="#9aa7ad"/><circle cx="72" cy="110" r="3.5" fill="#9aa7ad"/></svg>`}
+function show(id){["s0","s1","s2"].forEach(k=>$("#"+k).hidden=k!==id)}
+function start(){
+  const nm=($("#nm0").value||"Aluno").trim().slice(0,14);
+  try{localStorage.setItem("lixo-nome",nm)}catch(e){}
+  S={nm,lv:0,i:0,score:0,combo:0,best:0,lives:3,stat:{},lock:false,perfect:true,badges:new Set(),ok:0,tot:0};
+  level(0);
+}
+function level(n){
+  S.lv=n;S.i=0;S.perfect=true;
+  const novos=sh(ITEMS.filter(x=>x[3]===n)).slice(0,n?5:6);
+  const velhos=n?sh(ITEMS.filter(x=>x[3]<n)).slice(0,3):[];
+  S.q=sh(novos.concat(velhos));
+  $("#bins").innerHTML=LV[n].cats.map((k,j)=>`<button class="bin" data-k="${k}" aria-label="Lixeira ${BINS[k].n}">${can(k)}<span class="lb"><small>${j+1}</small>${BINS[k].n}</span></button>`).join("");
+  show("s1");next();
+}
+function hud(){
+  $("#hl").textContent="Nível "+(S.lv+1)+"/3";
+  $("#hh").textContent="♥".repeat(S.lives)+"♡".repeat(3-S.lives);
+  $("#hs").textContent=S.score+" pts";
+  $("#hc").textContent="Combo ×"+(1+Math.min(3,Math.floor(S.combo/3)));
+}
+function fb(cls,html){const f=$("#fb");f.className=cls;f.innerHTML=html}
+function next(){
+  if(S.i>=S.q.length)return levelEnd();
+  const it=S.q[S.i];S.lock=false;
+  $("#emo").textContent=it[0];$("#inm").textContent=it[1];
+  fb("",'<span style="color:var(--mut)">Arraste o item até a lixeira certa.</span>');
+  S.left=LV[S.lv].time;S.max=S.left;hud();
+  clearInterval(timer);
+  timer=setInterval(()=>{
+    S.left-=.1;
+    const p=Math.max(0,S.left/S.max*100),b=$("#tb");
+    b.style.width=p+"%";b.style.background=p<30?"var(--bad)":"var(--ok)";
+    if(S.left<=0)answer(null);
+  },100);
+}
+function answer(k){
+  if(S.lock)return;S.lock=true;clearInterval(timer);
+  const it=S.q[S.i],cat=it[2];
+  const st=S.stat[cat]||(S.stat[cat]={ok:0,err:0});
+  S.tot++;
+  if(k===cat){
+    st.ok++;S.ok++;S.combo++;S.best=Math.max(S.best,S.combo);
+    if(S.combo>=5)S.badges.add("Sequência de 5");
+    const pts=(100+Math.ceil(S.left*10))*(1+Math.min(3,Math.floor(S.combo/3)));
+    S.score+=pts;hud();
+    fb("ok",`<b>Certo! +${pts} pontos</b>${it[4]}`);
+    setTimeout(adv,1300);
+  }else{
+    st.err++;S.combo=0;S.lives--;S.perfect=false;hud();
+    $("#card").classList.remove("shake");void $("#card").offsetWidth;$("#card").classList.add("shake");
+    fb("bad",`<b>${k?"Ops!":"Tempo esgotado!"} Era ${BINS[cat].n}.</b>${it[4]}<br><button class="btn" id="cont">Continuar</button>`);
+    $("#cont").focus();$("#cont").onclick=adv;
+  }
+}
+function adv(){
+  if(!S.lock)return;
+  S.i++;
+  if(S.lives<=0)return finish(false);
+  next();
+}
+function levelEnd(){
+  if(S.perfect)S.badges.add("Nível "+(S.lv+1)+" sem erros");
+  if(S.lv<2){
+    S.lock=true;
+    fb("ok",`<b>Nível ${S.lv+1} concluído!</b>Próximo: ${S.lv?"rejeitos e resíduos perigosos":"orgânicos"}.<br><button class="btn" id="cont">Ir para o nível ${S.lv+2}</button>`);
+    $("#cont").focus();$("#cont").onclick=()=>level(S.lv+1);
+  }else finish(true);
+}
+function finish(won){
+  clearInterval(timer);
+  const acc=S.tot?S.ok/S.tot:0;
+  if(won)S.badges.add("Reciclador completo");
+  if(won&&acc>=.9)S.badges.add("Pontaria de 90%");
+  $("#et").textContent=won?"Você zerou o jogo!":"Fim de jogo";
+  $("#e1").textContent=S.score;$("#e2").textContent=Math.round(acc*100)+"%";$("#e3").textContent=S.best;
+  $("#eb").innerHTML=S.badges.size?[...S.badges].map(b=>`<span class="tag">🏅 ${b}</span>`).join(""):"<p>Nenhuma conquista desta vez. Tente uma sequência de 5 acertos.</p>";
+  const erros=Object.entries(S.stat).filter(e=>e[1].err).sort((a,b)=>b[1].err-a[1].err);
+  $("#ee").innerHTML=erros.length?erros.map(e=>`<span class="tag">${BINS[e[0]].n}: ${e[1].err} ${e[1].err>1?"erros":"erro"}</span>`).join(""):"<p>Nenhum erro. Parabéns!</p>";
+  const eu={n:S.nm,s:S.score};
+  let r=[];
+  try{r=JSON.parse(localStorage.getItem("lixo-rank")||"[]")}catch(e){}
+  r.push(eu);r.sort((a,b)=>b.s-a.s);r=r.slice(0,5);
+  try{localStorage.setItem("lixo-rank",JSON.stringify(r))}catch(e){}
+  $("#rh").textContent="Ranking deste aparelho";
+  $("#er").innerHTML=r.map(x=>`<li class="${x===eu?"me":""}">${esc(x.n)}: ${x.s} pts</li>`).join("");
+  show("s2");
+  if(CFG.url&&CFG.key)online(eu);
+}
+const card=$("#card");let drag=false,ghost=null;
+card.addEventListener("dragstart",e=>e.preventDefault());
+function binAt(x,y){return [...document.querySelectorAll(".bin")].find(b=>{const r=b.getBoundingClientRect();return x>=r.left-4&&x<=r.right+4&&y>=r.top-8&&y<=r.bottom+4})}
+function hot(b){document.querySelectorAll(".bin").forEach(x=>x.classList.toggle("hot",x===b))}
+function moveDrag(e){if(!drag)return;e.preventDefault();ghost.style.left=e.clientX+"px";ghost.style.top=e.clientY+"px";hot(binAt(e.clientX,e.clientY))}
+function endDrag(e,drop){
+  if(!drag)return;
+  const b=drop?binAt(e.clientX,e.clientY):null;
+  drag=false;if(ghost){ghost.remove();ghost=null}
+  card.style.opacity="";hot(null);
+  window.removeEventListener("pointermove",moveDrag);window.removeEventListener("pointerup",upDrag);window.removeEventListener("pointercancel",cancelDrag);
+  if(b&&!S.lock)answer(b.dataset.k);
+}
+function upDrag(e){endDrag(e,true)}
+function cancelDrag(e){endDrag(e,false)}
+card.addEventListener("pointerdown",e=>{
+  if(S.lock||$("#s1").hidden||e.button>0)return;
+  e.preventDefault();drag=true;
+  ghost=document.createElement("div");ghost.className="ghost";ghost.textContent=S.q[S.i][0];
+  ghost.style.left=e.clientX+"px";ghost.style.top=e.clientY+"px";
+  document.body.appendChild(ghost);card.style.opacity=".35";
+  window.addEventListener("pointermove",moveDrag,{passive:false});
+  window.addEventListener("pointerup",upDrag);window.addEventListener("pointercancel",cancelDrag);
+});
+// RANKING ONLINE (Supabase): cole aqui a URL do projeto e a chave pública (anon/publishable).
+// Deixe vazio para usar só o ranking local deste aparelho. Nunca use a chave secreta (service_role).
+const CFG={url:"iwpqgdjnhuwxdafortyh",key:"sb_publishable_IsVvmV1lnKalX13V1X_SOA_6v0734Xx"};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+async function online(eu){
+  const base=CFG.url.replace(/\/$/,"")+"/rest/v1/scores";
+  const h={apikey:CFG.key,"Content-Type":"application/json"};
+  $("#rh").textContent="Ranking da turma (carregando...)";
+  try{
+    await fetch(base,{method:"POST",headers:{...h,Prefer:"return=minimal"},body:JSON.stringify({name:eu.n,score:eu.s})});
+    const res=await fetch(base+"?select=name,score&order=score.desc&limit=10",{headers:h});
+    if(!res.ok)throw new Error("falha");
+    const d=await res.json();let marcado=false;
+    $("#er").innerHTML=d.map(x=>{const me=!marcado&&x.name===eu.n&&x.score===eu.s;if(me)marcado=true;return `<li class="${me?"me":""}">${esc(x.name)}: ${x.score} pts</li>`}).join("");
+    $("#rh").textContent="Ranking da turma";
+  }catch(e){$("#rh").textContent="Sem conexão. Ranking deste aparelho"}
+}
+$("#go").onclick=start;
+$("#again").onclick=()=>show("s0");
+$("#bins").onclick=e=>{const b=e.target.closest(".bin");if(b)answer(b.dataset.k)};
+document.addEventListener("keydown",e=>{
+  if($("#s1").hidden)return;
+  const n=+e.key;
+  if(n>=1&&n<=LV[S.lv].cats.length&&!S.lock)answer(LV[S.lv].cats[n-1]);
+});
+try{$("#nm0").value=localStorage.getItem("lixo-nome")||""}catch(e){}
+</script>
+</body>
+</html>
