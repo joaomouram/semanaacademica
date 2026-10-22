@@ -62,7 +62,41 @@ input{font:inherit;width:100%;padding:11px 12px;border-radius:12px;border:1px so
 h1,h2,label,.sub{text-align:center}
 label{display:block}
 #eb,#ee{text-align:center}
-#go,#again,#duelo,#criar,#entrar{display:block;margin:14px auto 0}
+#again,#criar,#entrar{display:block;margin:14px auto 0}
+.menu{position:relative;overflow-x:clip}
+.menu::before{content:"♻";position:absolute;right:0;top:150px;font-size:15rem;line-height:1;opacity:.07;transform:rotate(-12deg);pointer-events:none}
+body.menu-on{background:linear-gradient(#bfe3ff,#e8f6ee 65%) fixed no-repeat,#e8f6ee}
+@media (prefers-color-scheme:dark){body.menu-on{background:linear-gradient(#1c3b4d,#162124 70%) fixed no-repeat,#162124}}
+.topo{display:flex;gap:10px;align-items:center}
+.placa{flex:1;display:flex;align-items:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:2px 12px}
+.placa:focus-within{border-color:var(--ink)}
+.placa input:focus-visible{outline:none}
+.placa input{border:0;margin:0;padding:9px 0;background:transparent;font-weight:700;font-size:1.05rem;width:100%;text-align:left}
+.redondo{width:46px;height:46px;border-radius:50%;font-size:1.3rem;padding:0}
+.logo{display:flex;flex-direction:column;align-items:center;margin:20px 0 24px;line-height:.95;text-transform:uppercase;transform:rotate(-2deg);paint-order:stroke fill;-webkit-text-stroke:7px #1b2a30}
+.logo .l1{font-size:1.6rem;color:#fff}
+.logo .l2{font-size:2.9rem;color:#ffd23f;text-shadow:0 5px 0 #1b2a30}
+.botoes{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.mb{font:inherit;cursor:pointer;width:100%;border:3px solid #1b2a30;border-radius:18px;color:#fff;display:flex;align-items:center;gap:12px;padding:12px 16px;text-align:left;text-transform:uppercase;font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.35);box-shadow:0 6px 0 #1b2a30,inset 0 3px 0 rgba(255,255,255,.35);transition:transform .08s,box-shadow .08s}
+.mb:active{transform:translateY(5px);box-shadow:0 1px 0 #1b2a30,inset 0 3px 0 rgba(255,255,255,.35)}
+.mb:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.mb.laranja{background:linear-gradient(#ffa63a,#ee7d11)}
+.mb.azul{background:linear-gradient(#4a9cf0,#1d6fd1)}
+.mb.verde{background:linear-gradient(#45c27a,#1f8a4c)}
+.mb.amarelo{background:linear-gradient(#ffe066,#f2b705);color:#1b1f23;text-shadow:none}
+.mb .ico{width:58px;flex:none;display:flex;filter:drop-shadow(0 3px 0 rgba(0,0,0,.3))}
+.mb .ico svg{width:100%;height:auto;display:block}
+#icoM{width:92px;position:relative;gap:2px;align-items:flex-end}
+#icoM svg{width:42px}
+.vs{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%) rotate(-8deg);z-index:2;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#ffd23f;color:#1b2a30;border:2px solid #1b2a30;box-shadow:0 2px 0 #1b2a30;font-style:normal;font-size:.8rem;font-weight:800;text-shadow:none}
+@media (max-width:400px){.mb{padding:10px 12px;gap:8px}.mb b{font-size:1.15rem}.mb .ico{width:50px}#icoM{width:78px}#icoM svg{width:36px}.vs{width:28px;height:28px;font-size:.7rem}}
+@media (max-width:340px){.linha{gap:10px}.mb.peq{font-size:.82rem;padding:10px 4px}.mb b{font-size:.95rem}.mb small{font-size:.7rem}.mb .ico{width:42px}#icoM{width:64px}#icoM svg{width:30px}.vs{width:24px;height:24px;font-size:.6rem}}
+.mb .tx{display:flex;flex-direction:column;line-height:1.1}
+.mb b{font-size:1.5rem;letter-spacing:.02em}
+.mb small{font-weight:600;font-size:.78rem;text-transform:none;margin-top:4px;text-shadow:0 1px 0 rgba(0,0,0,.3)}
+.mb.peq{justify-content:center;font-size:1rem;padding:10px 8px;text-align:center}
+.linha{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.painel{margin-top:18px}
 .btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
 .rival{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:6px 12px;margin-bottom:10px;font-weight:500;font-size:.88rem;text-align:center}
 .cod{font-size:2.6rem;font-weight:800;letter-spacing:.3em;text-align:center;margin:8px 0}
@@ -77,23 +111,28 @@ ol{padding-left:22px;margin:0}li.me{font-weight:800}
 </head>
 <body>
 <main>
-<section id="s0">
-  <h1>Lixo no lugar certo</h1>
-  <p class="sub">Escolha a lixeira correta antes que o tempo acabe. Acertos em sequência multiplicam os pontos, e cada erro custa uma vida.</p>
-  <div class="card" id="perfil" style="margin-bottom:12px"></div>
-  <div class="card">
-    <label for="nm0"><b>Seu nome para o ranking</b></label>
-    <input id="nm0" maxlength="14" placeholder="Seu apelido" autocomplete="off">
-    <p class="nota" style="text-align:center">Cada nome é único. Depois de escolhido, só você poderá usá-lo neste aparelho.</p>
-    <p id="nmErro" role="alert" hidden style="color:var(--bad);font-weight:700;text-align:center;margin:8px 0 0"></p>
-    <button class="btn" id="go">Começar</button>
-    <button class="btn sec" id="duelo">⚔️ Duelo com um amigo</button>
-    <button class="somb" id="soms" style="display:block;margin:10px auto 0;padding:0 16px" aria-label="Ligar ou desligar o som"></button>
-    <h2>Como jogar</h2>
+<section id="s0" class="menu">
+  <div class="topo">
+    <label class="placa" for="nm0"><span aria-hidden="true">👤</span><input id="nm0" maxlength="14" placeholder="Seu apelido" autocomplete="off"></label>
+    <button class="somb redondo" id="soms" aria-label="Ligar ou desligar o som"></button>
+  </div>
+  <p id="nmErro" role="alert" hidden style="color:var(--bad);font-weight:700;text-align:center;margin:8px 0 0"></p>
+  <h1 class="logo"><span class="l1">Lixo no</span><span class="l2">lugar certo</span></h1>
+  <div class="botoes">
+    <button class="mb laranja" id="go"><span class="ico" id="icoS"></span><span class="tx"><b id="goL">Um jogador</b><small>Treine sozinho e suba de nível</small></span></button>
+    <button class="mb azul" id="duelo"><span class="ico" id="icoM"></span><span class="tx"><b>Multijogador</b><small>Duelo ao vivo com um amigo</small></span></button>
+    <div class="linha">
+      <button class="mb verde peq" id="btPerfil">📊 Meu perfil</button>
+      <button class="mb amarelo peq" id="btComo">❓ Como jogar</button>
+    </div>
+  </div>
+  <div class="card painel" id="perfil" hidden></div>
+  <div class="card painel" id="como" hidden>
     <p>Arraste o item até a lixeira certa. Também dá para tocar na lixeira ou usar as teclas numéricas. Três níveis: recicláveis, orgânicos e, por fim, rejeitos e resíduos perigosos.</p>
     <p>As cores seguem o padrão CONAMA. Confira sempre as regras de coleta do seu município.</p>
-    <p><small>Versão 8: duelo para dois jogadores.</small></p>
   </div>
+  <p class="nota" style="text-align:center;margin-top:16px">Cada nome é único. Depois de escolhido, só você poderá usá-lo neste aparelho.</p>
+  <p class="nota" style="text-align:center">Versão 12: diagnóstico do multijogador.</p>
 </section>
 
 <section id="s1" hidden>
@@ -143,7 +182,7 @@ ol{padding-left:22px;margin:0}li.me{font-weight:800}
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
+<script src="config.js?v=12"></script>
 <script>
 const BINS={papel:{n:"Papel",c:"#1d6fd1",t:"#fff"},plastico:{n:"Plástico",c:"#d6322e",t:"#fff"},vidro:{n:"Vidro",c:"#1f8a4c",t:"#fff"},metal:{n:"Metal",c:"#f2b705",t:"#1b1f23"},organico:{n:"Orgânico",c:"#7a4b2a",t:"#fff"},rejeito:{n:"Rejeito",c:"#5f6b74",t:"#fff"},perigoso:{n:"Perigoso",c:"#ee7d11",t:"#1b1f23"}};
 const LV=[
@@ -181,7 +220,7 @@ let S,timer;
 const ICON={papel:"📄",plastico:"🧴",vidro:"🍾",metal:"🥫",organico:"🍎",rejeito:"🚫",perigoso:"⚠️"};
 function can(k){const c=BINS[k].c;
  return `<svg viewBox="0 0 100 124" aria-hidden="true"><ellipse cx="50" cy="119" rx="38" ry="4" fill="#000" opacity=".15"/><rect x="20" y="97" width="60" height="6" rx="3" fill="${c}"/><rect x="20" y="97" width="60" height="6" rx="3" fill="#000" opacity=".25"/><path d="M14 30H86L80 99H20Z" fill="${c}"/><path d="M14 30H26L32 99H20Z" fill="#fff" opacity=".18"/><path d="M74 30H86L80 99H68Z" fill="#000" opacity=".18"/><path d="M40 38V92M60 38V92" stroke="#000" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="64" r="19" fill="#fff" opacity=".94"/><text x="50" y="72" font-size="23" text-anchor="middle">${ICON[k]}</text><g class="lidg"><rect x="8" y="17" width="84" height="13" rx="6" fill="${c}"/><rect x="8" y="17" width="84" height="13" rx="6" fill="#000" opacity=".2"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="${c}"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="#000" opacity=".2"/></g><circle cx="28" cy="110" r="9" fill="#2b3236"/><circle cx="72" cy="110" r="9" fill="#2b3236"/><circle cx="28" cy="110" r="3.5" fill="#9aa7ad"/><circle cx="72" cy="110" r="3.5" fill="#9aa7ad"/></svg>`}
-function show(id){["s0","s1","s2","s3"].forEach(k=>$("#"+k).hidden=k!==id)}
+function show(id){document.body.classList.toggle("menu-on",id==="s0");["s0","s1","s2","s3"].forEach(k=>$("#"+k).hidden=k!==id)}
 function erroNome(m){const e=$("#nmErro");e.textContent=m;e.hidden=!m}
 async function prepara(){
   audio();
@@ -191,13 +230,13 @@ async function prepara(){
   erroNome("");
   let nomeOk=false;
   if(ONLINE){
-    const bs=[$("#go"),$("#duelo")];bs.forEach(b=>b.disabled=true);$("#go").textContent="Verificando...";
+    const bs=[$("#go"),$("#duelo")];bs.forEach(b=>b.disabled=true);$("#goL").textContent="Verificando...";
     try{
       const r=await rpc("reservar_nome",{p_nome:nm,p_dono:DONO});
-      if(r!=="ok"){$("#go").textContent="Começar";bs.forEach(b=>b.disabled=false);erroNome("O nome “"+nm+"” não está disponível. Escolha outro.");return null}
+      if(r!=="ok"){$("#goL").textContent="Um jogador";bs.forEach(b=>b.disabled=false);erroNome("O nome “"+nm+"” não está disponível. Escolha outro.");return null}
       nomeOk=true;
     }catch(e){}
-    $("#go").textContent="Começar";bs.forEach(b=>b.disabled=false);
+    $("#goL").textContent="Um jogador";bs.forEach(b=>b.disabled=false);
   }
   try{localStorage.setItem("lixo-nome",nm)}catch(e){}
   return{nm,nomeOk};
@@ -351,7 +390,7 @@ const SOM={
 };
 function pintaSom(){
   $("#somh").textContent=MUDO?"🔇":"🔊";
-  $("#soms").textContent=MUDO?"🔇 Som desligado":"🔊 Som ligado";
+  $("#soms").textContent=MUDO?"🔇":"🔊";
   $("#somh").setAttribute("aria-pressed",MUDO?"true":"false");$("#soms").setAttribute("aria-pressed",MUDO?"true":"false");
 }
 function alterna(){MUDO=!MUDO;try{localStorage.setItem("lixo-mudo",MUDO?"1":"0")}catch(e){}pintaSom();if(!MUDO)SOM.pega()}
@@ -384,7 +423,8 @@ function fechaPerfil(){
 // RANKING ONLINE (Supabase): a URL e a chave pública ficam no arquivo config.js.
 // Sem esse arquivo, o jogo usa só o ranking local deste aparelho.
 const CFG=window.CFG_RANKING||{url:"",key:""};
-const DONO=(()=>{try{let d=localStorage.getItem("lixo-dono");if(!d){d=crypto.randomUUID?crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==="x"?r:(r&3|8)).toString(16)});localStorage.setItem("lixo-dono",d)}return d}catch(e){return null}})();
+const novoId=()=>crypto.randomUUID?crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==="x"?r:(r&3|8)).toString(16)});
+const DONO=(()=>{let d=null;try{d=localStorage.getItem("lixo-dono");if(!d){d=novoId();localStorage.setItem("lixo-dono",d)}}catch(e){}return d||novoId()})();
 const ONLINE=!!(CFG.url&&CFG.key&&DONO);
 async function rpc(fn,args){
   const res=await fetch(CFG.url.replace(/\/$/,"")+"/rest/v1/rpc/"+fn,{method:"POST",headers:{apikey:CFG.key,"Content-Type":"application/json"},body:JSON.stringify(args)});
@@ -424,6 +464,10 @@ function abreCanal(codigo,aoSub){
   return true;
 }
 async function abreLobby(){
+  if(!ONLINE){
+    const motivo=!window.CFG_RANKING?"o navegador não carregou o config.js (tente Ctrl + F5, uma janela anônima ou desative bloqueadores de anúncios neste site).":"o config.js foi carregado, mas a URL ou a chave estão vazias.";
+    erroNome("Multijogador indisponível: "+motivo);return
+  }
   const r=await prepara();if(!r)return;
   sairSala();L={eu:r,rival:null,codigo:null,seed:null,papel:null};
   lobErro("");$("#lob0").hidden=false;$("#lob1").hidden=true;show("s3");
@@ -503,7 +547,10 @@ document.addEventListener("keydown",e=>{
 try{$("#nm0").value=localStorage.getItem("lixo-nome")||""}catch(e){}
 drawPerfil();
 pintaSom();$("#somh").onclick=$("#soms").onclick=alterna;
-$("#duelo").hidden=!ONLINE;
+$("#icoS").innerHTML=can("vidro");$("#icoM").innerHTML=can("plastico")+'<i class="vs">VS</i>'+can("metal");
+document.body.classList.add("menu-on");
+$("#btPerfil").onclick=()=>{const p=$("#perfil");p.hidden=!p.hidden;$("#como").hidden=true};
+$("#btComo").onclick=()=>{const p=$("#como");p.hidden=!p.hidden;$("#perfil").hidden=true};
 </script>
 </body>
 </html>
