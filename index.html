@@ -56,10 +56,16 @@ input{font:inherit;width:100%;padding:11px 12px;border-radius:12px;border:1px so
 .imp em{flex:1;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
 .imp i{display:block;height:100%;background:var(--c);border-radius:6px}
 .nota{font-size:.82rem;margin:0}
+.somb{font:inherit;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;min-width:38px;height:32px;cursor:pointer}
+.hud span{white-space:nowrap}
+@media (max-width:600px){.hud{gap:4px;flex-wrap:wrap}.hud span{padding:4px 8px;font-size:.84rem;white-space:nowrap}.cw{display:none}}
 h1,h2,label,.sub{text-align:center}
 label{display:block}
 #eb,#ee{text-align:center}
-#go,#again{display:block;margin:14px auto 0}
+#go,#again,#duelo,#criar,#entrar{display:block;margin:14px auto 0}
+.btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.rival{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:6px 12px;margin-bottom:10px;font-weight:500;font-size:.88rem;text-align:center}
+.cod{font-size:2.6rem;font-weight:800;letter-spacing:.3em;text-align:center;margin:8px 0}
 .tag{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 12px;margin:0 6px 6px 0;font-size:.92rem}
 ol{padding-left:22px;margin:0}li.me{font-weight:800}
 .shake{animation:sh .35s}
@@ -81,15 +87,18 @@ ol{padding-left:22px;margin:0}li.me{font-weight:800}
     <p class="nota" style="text-align:center">Cada nome é único. Depois de escolhido, só você poderá usá-lo neste aparelho.</p>
     <p id="nmErro" role="alert" hidden style="color:var(--bad);font-weight:700;text-align:center;margin:8px 0 0"></p>
     <button class="btn" id="go">Começar</button>
+    <button class="btn sec" id="duelo">⚔️ Duelo com um amigo</button>
+    <button class="somb" id="soms" style="display:block;margin:10px auto 0;padding:0 16px" aria-label="Ligar ou desligar o som"></button>
     <h2>Como jogar</h2>
     <p>Arraste o item até a lixeira certa. Também dá para tocar na lixeira ou usar as teclas numéricas. Três níveis: recicláveis, orgânicos e, por fim, rejeitos e resíduos perigosos.</p>
     <p>As cores seguem o padrão CONAMA. Confira sempre as regras de coleta do seu município.</p>
-    <p><small>Versão 6: nomes únicos no ranking.</small></p>
+    <p><small>Versão 8: duelo para dois jogadores.</small></p>
   </div>
 </section>
 
 <section id="s1" hidden>
-  <div class="hud"><span id="hl"></span><span id="hh"></span><span id="hs"></span><span id="hc"></span></div>
+  <div class="hud"><span id="hl"></span><span id="hh"></span><span id="hs"></span><span id="hc"></span><button class="somb" id="somh" aria-label="Ligar ou desligar o som"></button></div>
+  <div id="rival" class="rival" hidden></div>
   <div class="card item" id="card">
     <div class="emo" id="emo" aria-hidden="true"></div>
     <div class="nm" id="inm"></div>
@@ -99,8 +108,28 @@ ol{padding-left:22px;margin:0}li.me{font-weight:800}
   <div id="bins"></div>
 </section>
 
+<section id="s3" hidden>
+  <h1>Duelo</h1>
+  <p class="sub">Vocês jogam a mesma sequência de itens ao mesmo tempo. Vence quem fizer mais pontos.</p>
+  <div class="card">
+    <div id="lob0">
+      <button class="btn" id="criar">Criar sala</button>
+      <h2>Ou entre na sala de um amigo</h2>
+      <input id="cod" maxlength="4" placeholder="CÓDIGO" autocomplete="off" style="text-transform:uppercase;text-align:center;letter-spacing:.3em;font-weight:800">
+      <button class="btn" id="entrar">Entrar</button>
+    </div>
+    <div id="lob1" hidden>
+      <div class="cod" id="lobcod"></div>
+      <p class="nota" id="lobmsg" style="text-align:center"></p>
+    </div>
+    <p id="lobErro" role="alert" hidden style="color:var(--bad);font-weight:700;text-align:center;margin:8px 0 0"></p>
+    <button class="btn sec" id="voltar" style="display:block;margin:14px auto 0">Voltar</button>
+  </div>
+</section>
+
 <section id="s2" hidden>
   <h1 id="et"></h1>
+  <div class="card" id="mpres" style="margin-bottom:12px" hidden></div>
   <div class="card">
     <div class="stats">
       <div><b id="e1"></b>pontos</div><div><b id="e2"></b>acertos</div><div><b id="e3"></b>maior sequência</div>
@@ -113,6 +142,7 @@ ol{padding-left:22px;margin:0}li.me{font-weight:800}
 </section>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script>
 const BINS={papel:{n:"Papel",c:"#1d6fd1",t:"#fff"},plastico:{n:"Plástico",c:"#d6322e",t:"#fff"},vidro:{n:"Vidro",c:"#1f8a4c",t:"#fff"},metal:{n:"Metal",c:"#f2b705",t:"#1b1f23"},organico:{n:"Orgânico",c:"#7a4b2a",t:"#fff"},rejeito:{n:"Rejeito",c:"#5f6b74",t:"#fff"},perigoso:{n:"Perigoso",c:"#ee7d11",t:"#1b1f23"}};
@@ -144,38 +174,51 @@ const ITEMS=[
 ["🧽","Esponja de cozinha","rejeito",2,"Não é reciclável: rejeito."],
 ["🔌","Carregador quebrado","perigoso",2,"Eletrônicos e cabos vão para a coleta de eletrônicos."]];
 const $=s=>document.querySelector(s);
-const sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+let RND=Math.random;
+const sh=a=>a.map(x=>[RND(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
 let S,timer;
 
 const ICON={papel:"📄",plastico:"🧴",vidro:"🍾",metal:"🥫",organico:"🍎",rejeito:"🚫",perigoso:"⚠️"};
 function can(k){const c=BINS[k].c;
  return `<svg viewBox="0 0 100 124" aria-hidden="true"><ellipse cx="50" cy="119" rx="38" ry="4" fill="#000" opacity=".15"/><rect x="20" y="97" width="60" height="6" rx="3" fill="${c}"/><rect x="20" y="97" width="60" height="6" rx="3" fill="#000" opacity=".25"/><path d="M14 30H86L80 99H20Z" fill="${c}"/><path d="M14 30H26L32 99H20Z" fill="#fff" opacity=".18"/><path d="M74 30H86L80 99H68Z" fill="#000" opacity=".18"/><path d="M40 38V92M60 38V92" stroke="#000" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="64" r="19" fill="#fff" opacity=".94"/><text x="50" y="72" font-size="23" text-anchor="middle">${ICON[k]}</text><g class="lidg"><rect x="8" y="17" width="84" height="13" rx="6" fill="${c}"/><rect x="8" y="17" width="84" height="13" rx="6" fill="#000" opacity=".2"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="${c}"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="#000" opacity=".2"/></g><circle cx="28" cy="110" r="9" fill="#2b3236"/><circle cx="72" cy="110" r="9" fill="#2b3236"/><circle cx="28" cy="110" r="3.5" fill="#9aa7ad"/><circle cx="72" cy="110" r="3.5" fill="#9aa7ad"/></svg>`}
-function show(id){["s0","s1","s2"].forEach(k=>$("#"+k).hidden=k!==id)}
+function show(id){["s0","s1","s2","s3"].forEach(k=>$("#"+k).hidden=k!==id)}
 function erroNome(m){const e=$("#nmErro");e.textContent=m;e.hidden=!m}
-async function start(){
+async function prepara(){
+  audio();
   const nm=($("#nm0").value||"").trim().replace(/\s+/g," ");
-  if(nm.length<2)return erroNome("Escolha um nome com pelo menos 2 caracteres.");
-  if(!/^[\p{L}\p{N} ._-]+$/u.test(nm))return erroNome("Use só letras, números, espaço, ponto, hífen ou sublinhado.");
+  if(nm.length<2){erroNome("Escolha um nome com pelo menos 2 caracteres.");return null}
+  if(!/^[\p{L}\p{N} ._-]+$/u.test(nm)){erroNome("Use só letras, números, espaço, ponto, hífen ou sublinhado.");return null}
   erroNome("");
   let nomeOk=false;
   if(ONLINE){
-    const b=$("#go");b.disabled=true;b.textContent="Verificando...";
+    const bs=[$("#go"),$("#duelo")];bs.forEach(b=>b.disabled=true);$("#go").textContent="Verificando...";
     try{
       const r=await rpc("reservar_nome",{p_nome:nm,p_dono:DONO});
-      if(r!=="ok"){b.disabled=false;b.textContent="Começar";return erroNome("O nome “"+nm+"” não está disponível. Escolha outro.")}
+      if(r!=="ok"){$("#go").textContent="Começar";bs.forEach(b=>b.disabled=false);erroNome("O nome “"+nm+"” não está disponível. Escolha outro.");return null}
       nomeOk=true;
     }catch(e){}
-    b.disabled=false;b.textContent="Começar";
+    $("#go").textContent="Começar";bs.forEach(b=>b.disabled=false);
   }
   try{localStorage.setItem("lixo-nome",nm)}catch(e){}
-  S={nm,nomeOk,lv:0,i:0,score:0,combo:0,best:0,lives:3,stat:{},lock:false,perfect:true,badges:new Set(),ok:0,tot:0};
-  level(0);
+  return{nm,nomeOk};
 }
-function level(n){
-  S.lv=n;S.i=0;S.perfect=true;
+function novoJogo(r,mp){
+  S={nm:r.nm,nomeOk:r.nomeOk,lv:0,i:0,score:0,combo:0,best:0,lives:3,stat:{},lock:false,perfect:true,badges:new Set(),ok:0,tot:0,mp:mp||null};
+  if(mp){RND=semente(mp.seed);S.qs=[monta(0),monta(1),monta(2)];RND=Math.random}
+  $("#rival").hidden=!mp;
+  level(0);
+  if(mp)pintaRival();
+}
+async function start(){const r=await prepara();if(r)novoJogo(r,null)}
+function monta(n){
   const novos=sh(ITEMS.filter(x=>x[3]===n)).slice(0,n?5:6);
   const velhos=n?sh(ITEMS.filter(x=>x[3]<n)).slice(0,3):[];
-  S.q=sh(novos.concat(velhos));
+  return sh(novos.concat(velhos));
+}
+function semente(s){let a=s>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function level(n){
+  S.lv=n;S.i=0;S.perfect=true;
+  S.q=S.qs?S.qs[n]:monta(n);
   $("#bins").innerHTML=LV[n].cats.map((k,j)=>`<button class="bin" data-k="${k}" aria-label="Lixeira ${BINS[k].n}">${can(k)}<span class="lb"><small>${j+1}</small>${BINS[k].n}</span></button>`).join("");
   show("s1");next();
 }
@@ -183,7 +226,8 @@ function hud(){
   $("#hl").textContent="Nível "+(S.lv+1)+"/3";
   $("#hh").textContent="♥".repeat(S.lives)+"♡".repeat(3-S.lives);
   $("#hs").textContent=S.score+" pts";
-  $("#hc").textContent="Combo ×"+(1+Math.min(3,Math.floor(S.combo/3)));
+  $("#hc").innerHTML='<span class="cw">Combo </span>×'+(1+Math.min(3,Math.floor(S.combo/3)));
+  if(S.mp){envia("placar",{s:S.score,v:S.lives});pintaRival()}
 }
 function fb(cls,html){const f=$("#fb");f.className=cls;f.innerHTML=html}
 function next(){
@@ -191,12 +235,13 @@ function next(){
   const it=S.q[S.i];S.lock=false;
   $("#emo").textContent=it[0];$("#inm").textContent=it[1];
   fb("",'<span style="color:var(--mut)">Arraste o item até a lixeira certa.</span>');
-  S.left=LV[S.lv].time;S.max=S.left;hud();
+  S.left=LV[S.lv].time;S.max=S.left;S.ultSec=99;hud();
   clearInterval(timer);
   timer=setInterval(()=>{
     S.left-=.1;
     const p=Math.max(0,S.left/S.max*100),b=$("#tb");
     b.style.width=p+"%";b.style.background=p<30?"var(--bad)":"var(--ok)";
+    const sec=Math.ceil(S.left);if(sec<=3&&sec>0&&sec!==S.ultSec){S.ultSec=sec;SOM.alerta()}
     if(S.left<=0)answer(null);
   },100);
 }
@@ -209,11 +254,11 @@ function answer(k){
     st.ok++;S.ok++;S.combo++;S.best=Math.max(S.best,S.combo);
     if(S.combo>=5)S.badges.add("Sequência de 5");
     const pts=(100+Math.ceil(S.left*10))*(1+Math.min(3,Math.floor(S.combo/3)));
-    S.score+=pts;hud();
+    S.score+=pts;hud();SOM.acerto(S.combo);
     fb("ok",`<b>Certo! +${pts} pontos</b>${it[4]}`);
     setTimeout(adv,1300);
   }else{
-    st.err++;S.combo=0;S.lives--;S.perfect=false;hud();
+    st.err++;S.combo=0;S.lives--;S.perfect=false;hud();k?SOM.erro():SOM.tempo();
     $("#card").classList.remove("shake");void $("#card").offsetWidth;$("#card").classList.add("shake");
     fb("bad",`<b>${k?"Ops!":"Tempo esgotado!"} Era ${BINS[cat].n}.</b>${it[4]}<br><button class="btn" id="cont">Continuar</button>`);
     $("#cont").focus();$("#cont").onclick=adv;
@@ -228,6 +273,7 @@ function adv(){
 function levelEnd(){
   if(S.perfect)S.badges.add("Nível "+(S.lv+1)+" sem erros");
   if(S.lv<2){
+    SOM.nivel();
     S.lock=true;
     fb("ok",`<b>Nível ${S.lv+1} concluído!</b>Próximo: ${S.lv?"rejeitos e resíduos perigosos":"orgânicos"}.<br><button class="btn" id="cont">Ir para o nível ${S.lv+2}</button>`);
     $("#cont").focus();$("#cont").onclick=()=>level(S.lv+1);
@@ -235,6 +281,7 @@ function levelEnd(){
 }
 function finish(won){
   clearInterval(timer);
+  won?SOM.vitoria():SOM.derrota();
   const acc=S.tot?S.ok/S.tot:0;
   if(won)S.badges.add("Reciclador completo");
   if(won&&acc>=.9)S.badges.add("Pontaria de 90%");
@@ -253,11 +300,13 @@ function finish(won){
   $("#er").innerHTML=r.map(x=>`<li class="${x===eu?"me":""}">${esc(x.n)}: ${x.s} pts</li>`).join("");
   show("s2");
   if(ONLINE)online(eu);
+  $("#mpres").hidden=!S.mp;if(S.mp){envia("fim",{s:S.score});fimDuelo()}
 }
 const card=$("#card");let drag=false,ghost=null;
 card.addEventListener("dragstart",e=>e.preventDefault());
 function binAt(x,y){return [...document.querySelectorAll(".bin")].find(b=>{const r=b.getBoundingClientRect();return x>=r.left-4&&x<=r.right+4&&y>=r.top-8&&y<=r.bottom+4})}
-function hot(b){document.querySelectorAll(".bin").forEach(x=>x.classList.toggle("hot",x===b))}
+let ultHot=null;
+function hot(b){if(b&&b!==ultHot)SOM.tic();ultHot=b||null;document.querySelectorAll(".bin").forEach(x=>x.classList.toggle("hot",x===b))}
 function moveDrag(e){if(!drag)return;e.preventDefault();ghost.style.left=e.clientX+"px";ghost.style.top=e.clientY+"px";hot(binAt(e.clientX,e.clientY))}
 function endDrag(e,drop){
   if(!drag)return;
@@ -271,13 +320,41 @@ function upDrag(e){endDrag(e,true)}
 function cancelDrag(e){endDrag(e,false)}
 card.addEventListener("pointerdown",e=>{
   if(S.lock||$("#s1").hidden||e.button>0)return;
-  e.preventDefault();drag=true;
+  e.preventDefault();drag=true;SOM.pega();
   ghost=document.createElement("div");ghost.className="ghost";ghost.textContent=S.q[S.i][0];
   ghost.style.left=e.clientX+"px";ghost.style.top=e.clientY+"px";
   document.body.appendChild(ghost);card.style.opacity=".35";
   window.addEventListener("pointermove",moveDrag,{passive:false});
   window.addEventListener("pointerup",upDrag);window.addEventListener("pointercancel",cancelDrag);
 });
+// SONS (sintetizados no navegador com Web Audio: sem arquivos de áudio)
+let AC=null,MUDO=false;
+try{MUDO=localStorage.getItem("lixo-mudo")==="1"}catch(e){}
+function audio(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C()}if(AC&&AC.state==="suspended")AC.resume();return AC}
+function tom(f,t0,dur,tipo="sine",vol=.15,f2){
+  const a=audio();if(!a||MUDO)return;
+  const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+t0;
+  o.type=tipo;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+dur+.02);
+}
+const SOM={
+  pega(){tom(480,0,.06,"triangle",.09)},
+  tic(){tom(1100,0,.025,"square",.03)},
+  alerta(){tom(880,0,.07,"square",.05)},
+  acerto(c){const f=523.25*Math.pow(2,Math.min(c-1,6)*2/12);tom(f,0,.12,"sine",.16);tom(f*1.5,.08,.2,"sine",.14)},
+  erro(){tom(220,0,.28,"sawtooth",.1,110)},
+  tempo(){tom(300,0,.18,"square",.07,150);tom(200,.18,.25,"square",.07,100)},
+  nivel(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>tom(f,i*.1,.18,"triangle",.14))},
+  vitoria(){[523.25,659.25,783.99,1046.5,783.99,1046.5,1318.5].forEach((f,i)=>tom(f,i*.12,.22,"triangle",.15))},
+  derrota(){[392,349.23,311.13,261.63].forEach((f,i)=>tom(f,i*.18,.3,"triangle",.14))}
+};
+function pintaSom(){
+  $("#somh").textContent=MUDO?"🔇":"🔊";
+  $("#soms").textContent=MUDO?"🔇 Som desligado":"🔊 Som ligado";
+  $("#somh").setAttribute("aria-pressed",MUDO?"true":"false");$("#soms").setAttribute("aria-pressed",MUDO?"true":"false");
+}
+function alterna(){MUDO=!MUDO;try{localStorage.setItem("lixo-mudo",MUDO?"1":"0")}catch(e){}pintaSom();if(!MUDO)SOM.pega()}
 // PERFIL, XP, STREAK E IMPACTO (salvos neste aparelho)
 const TITULOS=["Reciclador Iniciante","Separador Atento","Eco-Aprendiz","Guardião do Descarte","Mestre da Coleta","Lenda Sustentável"];
 const PESO={papel:100,plastico:30,vidro:300,metal:15,organico:150,rejeito:50,perigoso:40}; // gramas por item: médias ilustrativas
@@ -327,17 +404,106 @@ async function online(eu){
     $("#rh").textContent="Ranking";
   }catch(e){$("#rh").textContent="Sem conexão. Ranking deste aparelho"}
 }
+// DUELO PARA DOIS JOGADORES (Supabase Realtime, canal Broadcast)
+let SB=null,CH=null,L=null,MPS=null;
+const ALF="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const gerar=()=>Array.from({length:4},()=>ALF[Math.random()*ALF.length|0]).join("");
+function lobErro(m){const e=$("#lobErro");e.textContent=m;e.hidden=!m}
+function envia(ev,payload){try{if(CH)CH.send({type:"broadcast",event:ev,payload:payload||{}})}catch(e){}}
+function sairCanal(){try{if(CH&&SB)SB.removeChannel(CH)}catch(e){}CH=null}
+function sairSala(){sairCanal();if(L)clearTimeout(L.espera);L=null;MPS=null;if(S)S.mp=null}
+function abreCanal(codigo,aoSub){
+  if(!window.supabase){lobErro("Não foi possível carregar o modo duelo. Verifique a conexão.");return false}
+  if(!SB)SB=window.supabase.createClient(CFG.url,CFG.key);
+  CH=SB.channel("sala-"+codigo,{config:{broadcast:{self:false}}});
+  ["entrei","convite","placar","fim"].forEach(ev=>CH.on("broadcast",{event:ev},m=>recebe(ev,(m&&m.payload)||{})));
+  CH.subscribe(st=>{
+    if(st==="SUBSCRIBED")aoSub();
+    else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT")lobErro("Falha na conexão em tempo real. Tente de novo.");
+  });
+  return true;
+}
+async function abreLobby(){
+  const r=await prepara();if(!r)return;
+  sairSala();L={eu:r,rival:null,codigo:null,seed:null,papel:null};
+  lobErro("");$("#lob0").hidden=false;$("#lob1").hidden=true;show("s3");
+}
+function criarSala(){
+  lobErro("");sairCanal();
+  L.papel="host";L.codigo=gerar();
+  abreCanal(L.codigo,()=>{$("#lob0").hidden=true;$("#lob1").hidden=false;$("#lobcod").textContent=L.codigo;$("#lobmsg").textContent="Passe este código ao seu rival e aguarde ele entrar."});
+}
+function entrarSala(){
+  lobErro("");
+  const c=($("#cod").value||"").trim().toUpperCase();
+  if(c.length!==4)return lobErro("O código tem 4 caracteres.");
+  sairCanal();L.papel="guest";L.codigo=c;
+  abreCanal(c,()=>{
+    $("#lob0").hidden=true;$("#lob1").hidden=false;$("#lobcod").textContent=c;$("#lobmsg").textContent="Procurando a sala...";
+    envia("entrei",{nome:L.eu.nm});
+    L.espera=setTimeout(()=>{if(L&&!L.rival){sairCanal();lobErro("Sala não encontrada, ou o anfitrião saiu. Confira o código.");$("#lob0").hidden=false;$("#lob1").hidden=true}},7000);
+  });
+}
+function recebe(ev,p){
+  if(ev==="entrei"&&L&&L.papel==="host"&&!L.rival){
+    L.rival=p.nome||"Rival";L.seed=Math.random()*2147483647|0;
+    envia("convite",{seed:L.seed,host:L.eu.nm});contagem();
+  }else if(ev==="convite"&&L&&L.papel==="guest"&&!L.rival){
+    clearTimeout(L.espera);L.rival=p.host||"Rival";L.seed=p.seed;contagem();
+  }else if(ev==="placar"&&MPS){
+    MPS.s=p.s;MPS.v=p.v;pintaRival();if(!$("#s2").hidden)fimDuelo();
+  }else if(ev==="fim"&&MPS){
+    MPS.s=p.s;MPS.fim=true;pintaRival();if(!$("#s2").hidden)fimDuelo();
+  }
+}
+function contagem(){
+  MPS={nome:L.rival,s:0,v:3,fim:false,parcial:false,bonus:false,som:false};
+  $("#lob0").hidden=true;$("#lob1").hidden=false;$("#lobmsg").textContent="Rival: "+L.rival;
+  const passos=["3","2","1","Já!"];let i=0;
+  const t=()=>{
+    if(!L)return;
+    $("#lobcod").textContent=passos[i];
+    if(i===3){SOM.nivel();setTimeout(()=>{if(L)novoJogo(L.eu,{seed:L.seed,rival:L.rival})},500)}
+    else{SOM.alerta();i++;setTimeout(t,900)}
+  };
+  t();
+}
+function pintaRival(){
+  if(!MPS||!S||!S.mp)return;
+  const r=MPS.s,eu=S.score,vid="♥".repeat(Math.max(0,MPS.v))+"♡".repeat(Math.max(0,3-MPS.v));
+  $("#rival").innerHTML=`⚔️ ${esc(MPS.nome)}: <b>${r}</b> pts <span style="color:var(--bad)">${vid}</span> · ${eu>r?"você está na frente":eu<r?"você está atrás":"empatados"}`;
+}
+function fimDuelo(){
+  if(!MPS||!S||!S.mp)return;
+  const box=$("#mpres");box.hidden=false;
+  const eu=S.score,r=MPS.s;
+  if(!MPS.fim&&!MPS.parcial){
+    box.innerHTML=`<h2 style="margin-top:0">⚔️ Duelo contra ${esc(MPS.nome)}</h2><p>Você fez <b>${eu}</b> pts. Aguardando o rival terminar... (placar dele agora: ${r} pts)</p><button class="btn sec" id="parc" style="display:block;margin:6px auto 0">Ver resultado parcial</button>`;
+    $("#parc").onclick=()=>{MPS.parcial=true;fimDuelo()};
+    return;
+  }
+  const res=eu>r?"venceu":eu<r?"perdeu":"empate";
+  if(res==="venceu"&&MPS.fim&&!MPS.bonus){MPS.bonus=true;const p=perfil();p.xp+=100;salvar(p)}
+  box.innerHTML=`<h2 style="margin-top:0">${res==="venceu"?"🏆 Você venceu o duelo!":res==="perdeu"?"Você perdeu o duelo":"🤝 Empate!"}</h2><div class="stats"><div><b>${eu}</b>você</div><div><b>${r}</b>${esc(MPS.nome)}</div></div>${MPS.fim?"":'<p class="nota">Resultado parcial: o rival ainda não terminou.</p>'}${MPS.bonus?"<p>+100 XP de bônus pela vitória!</p>":""}`;
+  if(res==="venceu"&&!MPS.som){MPS.som=true;SOM.vitoria()}
+}
+$("#duelo").onclick=abreLobby;$("#criar").onclick=criarSala;$("#entrar").onclick=entrarSala;
+$("#voltar").onclick=()=>{sairSala();drawPerfil();show("s0")};
+$("#cod").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase();lobErro("")});
 $("#go").onclick=start;
 $("#nm0").addEventListener("input",()=>erroNome(""));
-$("#again").onclick=()=>{drawPerfil();show("s0")};
+$("#again").onclick=()=>{sairSala();drawPerfil();show("s0")};
 $("#bins").onclick=e=>{const b=e.target.closest(".bin");if(b)answer(b.dataset.k)};
 document.addEventListener("keydown",e=>{
   if($("#s1").hidden)return;
+  if(e.key==="m"||e.key==="M"){alterna();return}
   const n=+e.key;
   if(n>=1&&n<=LV[S.lv].cats.length&&!S.lock)answer(LV[S.lv].cats[n-1]);
 });
 try{$("#nm0").value=localStorage.getItem("lixo-nome")||""}catch(e){}
 drawPerfil();
+pintaSom();$("#somh").onclick=$("#soms").onclick=alterna;
+$("#duelo").hidden=!ONLINE;
 </script>
 </body>
 </html>
