@@ -127,6 +127,9 @@ body.menu-on .cenario{display:block}
 .opc2 svg{width:16px;height:16px;color:#7ee8b0}
 .painel2{margin-top:16px;background:rgba(255,255,255,.04);border:1px solid #3a4630;border-radius:14px;padding:14px}
 .painel2 p{text-align:left}
+.stnome{min-height:1.3em;margin:6px 0 0;font-size:.85rem;font-weight:700;text-align:left}
+.stnome.bom{color:#6fdc9a}.stnome.ruim{color:#ff9b8c}.stnome.aviso{color:var(--mut)}
+.opc.dim{opacity:.5}
 .rodape{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0 22px;font-weight:800;font-size:.85rem;color:#f1eedf;text-shadow:0 1px 3px rgba(0,0,0,.4)}
 @media (max-width:899px){.cartao{justify-self:stretch;max-width:none}.home .somb{top:12px}}
 @media (max-width:480px){.cartao>h2{font-size:1.6rem}.opc{padding:14px 12px;gap:10px}.vivo{display:none}.arvores{display:none}.tile{width:46px;height:46px}}
@@ -151,7 +154,7 @@ body.menu-on .cenario{display:block}
       <div class="lixo-deco" id="lixoDeco" aria-hidden="true"></div>
       <p class="ola"><span id="ola">Olá!</span><button class="link" id="trocar" type="button">trocar nome</button></p>
       <h2>Como você quer jogar?</h2>
-      <div class="nomebox" id="nomebox"><label for="nm0">Seu apelido (aparece no ranking)</label><input id="nm0" maxlength="14" placeholder="Seu apelido" autocomplete="off"></div>
+      <div class="nomebox" id="nomebox"><label for="nm0">Seu apelido (aparece no ranking)</label><input id="nm0" maxlength="14" placeholder="Seu apelido" autocomplete="off"><p class="stnome" id="nmStatus" aria-live="polite"></p></div>
       <p id="nmErro" class="erro" role="alert" hidden></p>
       <button class="opc ouro" id="go"><span class="tile"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span><span class="tx"><b id="goL">Um jogador</b><small>Treine sozinho e suba de nível</small></span><span class="seta"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></button>
       <button class="opc azul" id="duelo"><span class="tile"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="tx"><b>Multijogador</b><small>Duelo ao vivo com um amigo</small></span><span class="vivo">AO VIVO</span><span class="seta"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></button>
@@ -167,7 +170,7 @@ body.menu-on .cenario{display:block}
       </div>
     </div>
   </div>
-  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 14</span></footer>
+  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 15</span></footer>
 </section>
 
 <section id="s1" hidden>
@@ -434,6 +437,30 @@ function pintaSom(){
   $("#somh").setAttribute("aria-pressed",MUDO?"true":"false");$("#soms").setAttribute("aria-pressed",MUDO?"true":"false");
 }
 function alterna(){MUDO=!MUDO;try{localStorage.setItem("lixo-mudo",MUDO?"1":"0")}catch(e){}pintaSom();if(!MUDO)SOM.pega()}
+let tChk=null,seqChk=0;
+function stNome(cls,msg){
+  const e=$("#nmStatus");e.className="stnome "+cls;e.textContent=msg;
+  const bloq=cls==="ruim";$("#go").classList.toggle("dim",bloq);$("#duelo").classList.toggle("dim",bloq);
+}
+function checaNome(){
+  clearTimeout(tChk);seqChk++;const meu=seqChk;
+  const nm=($("#nm0").value||"").trim().replace(/\s+/g," ");
+  if(!nm){stNome("","");return}
+  if(nm.length<2){stNome("aviso","Use pelo menos 2 caracteres.");return}
+  if(!/^[\p{L}\p{N} ._-]+$/u.test(nm)){stNome("ruim","Use só letras, números, espaço, ponto, hífen ou sublinhado.");return}
+  if(!ONLINE){stNome("","");return}
+  stNome("aviso","Verificando...");
+  tChk=setTimeout(async()=>{
+    try{
+      const r=await rpc("checar_nome",{p_nome:nm,p_dono:DONO});
+      if(meu!==seqChk)return;
+      if(r==="livre")stNome("bom","✓ Nome disponível");
+      else if(r==="seu")stNome("bom","✓ Este nome é seu neste aparelho");
+      else if(r==="indisponivel")stNome("ruim","✗ Este nome já está em uso. Escolha outro.");
+      else stNome("aviso","Não foi possível verificar agora.");
+    }catch(e){if(meu===seqChk)stNome("aviso","Não foi possível verificar agora ("+(e&&e.message?e.message:"erro")+").")}
+  },400);
+}
 function pintaOla(){const n=($("#nm0").value||"").trim();$("#ola").textContent=n?"Olá, "+n+"!":"Olá!"}
 function pintaMissao(){
   const p=perfil(),m=(p.missao&&p.missao.d===hoje())?p.missao:{n:0,ok:false};
@@ -599,7 +626,8 @@ pintaSom();$("#somh").onclick=$("#soms").onclick=alterna;
 $("#lixoDeco").innerHTML=can("vidro").replace("🍾","🌱");
 pintaOla();$("#nomebox").hidden=!!$("#nm0").value.trim();
 $("#nm0").addEventListener("input",pintaOla);
-$("#trocar").onclick=()=>{const b=$("#nomebox");b.hidden=!b.hidden;if(!b.hidden)$("#nm0").focus()};
+$("#nm0").addEventListener("input",checaNome);
+$("#trocar").onclick=()=>{const b=$("#nomebox");b.hidden=!b.hidden;if(!b.hidden){$("#nm0").focus();checaNome()}};
 document.body.classList.add("menu-on");
 $("#btPerfil").onclick=()=>{const p=$("#perfil");p.hidden=!p.hidden;$("#como").hidden=true};
 $("#btComo").onclick=()=>{const p=$("#como");p.hidden=!p.hidden;$("#perfil").hidden=true};
