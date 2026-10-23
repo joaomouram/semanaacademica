@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lixo no lugar certo</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap">
 <style>
 :root{--bg:#e8eef0;--card:#fff;--ink:#17262b;--mut:#51646b;--line:#c9d6da;--ok:#1f8a4c;--bad:#c62f2a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#162124;--card:#212e32;--ink:#e8f0f2;--mut:#9db2b9;--line:#34454a;--ok:#4cc27f;--bad:#ff7a73}}
@@ -63,40 +63,6 @@ h1,h2,label,.sub{text-align:center}
 label{display:block}
 #eb,#ee{text-align:center}
 #again,#criar,#entrar{display:block;margin:14px auto 0}
-.menu{position:relative;overflow-x:clip}
-.menu::before{content:"♻";position:absolute;right:0;top:150px;font-size:15rem;line-height:1;opacity:.07;transform:rotate(-12deg);pointer-events:none}
-body.menu-on{background:linear-gradient(#bfe3ff,#e8f6ee 65%) fixed no-repeat,#e8f6ee}
-@media (prefers-color-scheme:dark){body.menu-on{background:linear-gradient(#1c3b4d,#162124 70%) fixed no-repeat,#162124}}
-.topo{display:flex;gap:10px;align-items:center}
-.placa{flex:1;display:flex;align-items:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:2px 12px}
-.placa:focus-within{border-color:var(--ink)}
-.placa input:focus-visible{outline:none}
-.placa input{border:0;margin:0;padding:9px 0;background:transparent;font-weight:700;font-size:1.05rem;width:100%;text-align:left}
-.redondo{width:46px;height:46px;border-radius:50%;font-size:1.3rem;padding:0}
-.logo{display:flex;flex-direction:column;align-items:center;margin:20px 0 24px;line-height:.95;text-transform:uppercase;transform:rotate(-2deg);paint-order:stroke fill;-webkit-text-stroke:7px #1b2a30}
-.logo .l1{font-size:1.6rem;color:#fff}
-.logo .l2{font-size:2.9rem;color:#ffd23f;text-shadow:0 5px 0 #1b2a30}
-.botoes{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
-.mb{font:inherit;cursor:pointer;width:100%;border:3px solid #1b2a30;border-radius:18px;color:#fff;display:flex;align-items:center;gap:12px;padding:12px 16px;text-align:left;text-transform:uppercase;font-weight:800;text-shadow:0 2px 0 rgba(0,0,0,.35);box-shadow:0 6px 0 #1b2a30,inset 0 3px 0 rgba(255,255,255,.35);transition:transform .08s,box-shadow .08s}
-.mb:active{transform:translateY(5px);box-shadow:0 1px 0 #1b2a30,inset 0 3px 0 rgba(255,255,255,.35)}
-.mb:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
-.mb.laranja{background:linear-gradient(#ffa63a,#ee7d11)}
-.mb.azul{background:linear-gradient(#4a9cf0,#1d6fd1)}
-.mb.verde{background:linear-gradient(#45c27a,#1f8a4c)}
-.mb.amarelo{background:linear-gradient(#ffe066,#f2b705);color:#1b1f23;text-shadow:none}
-.mb .ico{width:58px;flex:none;display:flex;filter:drop-shadow(0 3px 0 rgba(0,0,0,.3))}
-.mb .ico svg{width:100%;height:auto;display:block}
-#icoM{width:92px;position:relative;gap:2px;align-items:flex-end}
-#icoM svg{width:42px}
-.vs{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%) rotate(-8deg);z-index:2;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#ffd23f;color:#1b2a30;border:2px solid #1b2a30;box-shadow:0 2px 0 #1b2a30;font-style:normal;font-size:.8rem;font-weight:800;text-shadow:none}
-@media (max-width:400px){.mb{padding:10px 12px;gap:8px}.mb b{font-size:1.15rem}.mb .ico{width:50px}#icoM{width:78px}#icoM svg{width:36px}.vs{width:28px;height:28px;font-size:.7rem}}
-@media (max-width:340px){.linha{gap:10px}.mb.peq{font-size:.82rem;padding:10px 4px}.mb b{font-size:.95rem}.mb small{font-size:.7rem}.mb .ico{width:42px}#icoM{width:64px}#icoM svg{width:30px}.vs{width:24px;height:24px;font-size:.6rem}}
-.mb .tx{display:flex;flex-direction:column;line-height:1.1}
-.mb b{font-size:1.5rem;letter-spacing:.02em}
-.mb small{font-weight:600;font-size:.78rem;text-transform:none;margin-top:4px;text-shadow:0 1px 0 rgba(0,0,0,.3)}
-.mb.peq{justify-content:center;font-size:1rem;padding:10px 8px;text-align:center}
-.linha{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.painel{margin-top:18px}
 .btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
 .rival{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:6px 12px;margin-bottom:10px;font-weight:500;font-size:.88rem;text-align:center}
 .cod{font-size:2.6rem;font-weight:800;letter-spacing:.3em;text-align:center;margin:8px 0}
@@ -107,32 +73,101 @@ ol{padding-left:22px;margin:0}li.me{font-weight:800}
 .ghost{position:fixed;z-index:50;pointer-events:none;font-size:4rem;line-height:1;transform:translate(-50%,-60%) rotate(-6deg);filter:drop-shadow(0 10px 12px rgba(0,0,0,.3))}
 @media (prefers-reduced-motion:reduce){.shake{animation:none}.bar i,.bin .lidg{transition:none}}
 [hidden]{display:none!important}
+body.menu-on{background:radial-gradient(rgba(255,255,255,.06) 1.5px,transparent 1.6px) 0 0/22px 22px,#2a3a10;color:#e6e0cf}
+body.menu-on main{max-width:1180px;padding:0 24px;overflow-x:clip}
+main{position:relative;z-index:1}
+.cenario{display:none;position:fixed;left:0;right:0;bottom:0;height:170px;pointer-events:none;z-index:0;overflow:hidden}
+body.menu-on .cenario{display:block}
+.colina{position:absolute;border-radius:50%}
+.colina.c1{left:-15%;width:130%;height:320px;bottom:-165px;background:#5a9438}
+.colina.c2{left:-25%;width:150%;height:320px;bottom:-235px;background:#0f6a45}
+.arvores{position:absolute;left:1%;bottom:56px;width:230px}
+.home{--bg:#151813;--card:#1d211d;--ink:#e6e0cf;--mut:#b7b4a2;--line:#3a4630;--ok:#6fdc9a;--bad:#ff9b8c;position:relative;min-height:100vh;display:flex;flex-direction:column;padding-top:28px;font-family:"Nunito","Bricolage Grotesque",system-ui,sans-serif}
+.home .somb{position:absolute;right:0;top:20px;z-index:3;width:44px;height:44px;border-radius:50%;padding:0;font-size:1.2rem;background:#1d211d;border-color:#3a4630}
+.grade{flex:1;display:grid;grid-template-columns:minmax(0,1fr);gap:28px;align-content:center;padding:44px 0 24px}
+@media (min-width:900px){.grade{grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}}
+.home h1{text-align:left;font-family:"Baloo 2","Nunito",system-ui,sans-serif;font-weight:800;font-size:clamp(2.4rem,5.6vw,4rem);line-height:.98;margin:0 0 18px;letter-spacing:-.01em;color:#d8d3c6}
+.home h1 span{display:block}
+.home h1 .c2{color:#f2705a}
+.sub2{font-size:1.15rem;line-height:1.6;max-width:30rem;margin:0 0 26px;color:var(--mut);text-align:left}
+.missao{display:inline-flex;align-items:center;gap:12px;background:#1c1f1a;border-radius:14px;padding:12px 18px 12px 12px}
+.mi{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:#3b4a17;color:#7ee8b0;font-size:1.6rem}
+.mt{display:flex;flex-direction:column}
+.mt b{color:#7ee8b0;font-size:1rem}
+.mt small{color:var(--mut);font-size:.85rem;font-weight:700}
+.cartao{--bg:#151813;position:relative;background:#1d211d;border-radius:18px;padding:26px 24px 24px;box-shadow:0 14px 40px rgba(0,0,0,.35);max-width:520px;width:100%;justify-self:end}
+.deco-quad{position:absolute;right:-20px;bottom:-26px;width:64px;height:64px;background:#8a5a00;border-radius:14px;transform:rotate(18deg);z-index:-1}
+.lixo-deco{position:absolute;right:20px;top:-26px;width:64px;pointer-events:none}
+.lixo-deco svg{width:100%;height:auto;display:block}
+.ola{margin:0;color:#7ee8b0;font-weight:800;font-size:.95rem;text-align:left}
+.link{font:inherit;font-size:.78rem;background:none;border:0;color:var(--mut);text-decoration:underline;cursor:pointer;margin-left:8px;padding:0}
+.cartao>h2{text-align:left;font-family:"Baloo 2","Nunito",system-ui,sans-serif;font-weight:700;font-size:2rem;line-height:1.05;margin:2px 0 16px;color:#d3cfc3;max-width:78%}
+.nomebox{margin-bottom:12px}
+.nomebox label{display:block;text-align:left;font-size:.82rem;font-weight:700;color:var(--mut)}
+.cartao input{background:#151813;border:2px solid #3a4630;color:#e6e0cf;border-radius:12px;margin:2px 0 0;font-family:inherit;font-weight:700}
+.erro{color:#ff9b8c;font-weight:700;margin:0 0 12px;font-size:.9rem;text-align:left}
+.opc{font:inherit;width:100%;display:flex;align-items:center;gap:14px;border:0;border-radius:16px;padding:16px;margin-bottom:16px;text-align:left;cursor:pointer;color:#e6e0cf;transition:transform .08s,box-shadow .08s}
+.opc.ouro{background:#7a5700;box-shadow:0 7px 0 #c28a12}
+.opc.azul{background:#1b6ea6;box-shadow:0 7px 0 #124f78}
+.opc:active{transform:translateY(5px)}
+.opc.ouro:active{box-shadow:0 2px 0 #c28a12}
+.opc.azul:active{box-shadow:0 2px 0 #124f78}
+.opc:focus-visible,.opc2:focus-visible,.link:focus-visible{outline:3px solid #7ee8b0;outline-offset:3px}
+.tile{flex:none;display:grid;place-items:center;width:54px;height:54px;border-radius:12px;background:rgba(0,0,0,.28)}
+.tile svg{width:28px;height:28px}
+.ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.opc .tx{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.opc b{font-size:1.05rem;letter-spacing:.03em;text-transform:uppercase}
+.opc small{font-size:.78rem;font-weight:600;opacity:.8}
+.seta{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.35)}
+.seta svg{width:18px;height:18px}
+.vivo{flex:none;background:#a31515;color:#ffd9d4;border-radius:4px;padding:3px 8px;font-size:.65rem;font-weight:800;letter-spacing:.05em}
+.sec2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+.opc2{font:inherit;display:flex;align-items:center;justify-content:center;gap:8px;background:#2b3b10;border:2px solid #4f7a2a;border-radius:14px;padding:12px 8px;color:#d8e8c0;font-weight:800;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.opc2 svg{width:16px;height:16px;color:#7ee8b0}
+.painel2{margin-top:16px;background:rgba(255,255,255,.04);border:1px solid #3a4630;border-radius:14px;padding:14px}
+.painel2 p{text-align:left}
+.rodape{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0 22px;font-weight:800;font-size:.85rem;color:#f1eedf;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+@media (max-width:899px){.cartao{justify-self:stretch;max-width:none}.home .somb{top:12px}}
+@media (max-width:480px){.cartao>h2{font-size:1.6rem}.opc{padding:14px 12px;gap:10px}.vivo{display:none}.arvores{display:none}.tile{width:46px;height:46px}}
 </style>
 </head>
 <body>
+<div class="cenario" aria-hidden="true">
+  <div class="colina c1"></div><div class="colina c2"></div>
+  <svg class="arvores" viewBox="0 0 260 130"><g fill="#8be8b8"><rect x="46" y="70" width="8" height="60" rx="4"/><rect x="118" y="62" width="9" height="68" rx="4"/><rect x="196" y="82" width="8" height="48" rx="4"/></g><circle cx="46" cy="52" r="28" fill="#4f9a2e"/><circle cx="64" cy="64" r="24" fill="#5aa13a"/><circle cx="28" cy="66" r="22" fill="#3f8f3a"/><circle cx="122" cy="46" r="34" fill="#2f8a3c"/><circle cx="104" cy="62" r="26" fill="#4f9a2e"/><circle cx="144" cy="62" r="24" fill="#5aa13a"/><circle cx="200" cy="70" r="22" fill="#4f9a2e"/><circle cx="214" cy="80" r="18" fill="#5aa13a"/></svg>
+</div>
 <main>
-<section id="s0" class="menu">
-  <div class="topo">
-    <label class="placa" for="nm0"><span aria-hidden="true">👤</span><input id="nm0" maxlength="14" placeholder="Seu apelido" autocomplete="off"></label>
-    <button class="somb redondo" id="soms" aria-label="Ligar ou desligar o som"></button>
-  </div>
-  <p id="nmErro" role="alert" hidden style="color:var(--bad);font-weight:700;text-align:center;margin:8px 0 0"></p>
-  <h1 class="logo"><span class="l1">Lixo no</span><span class="l2">lugar certo</span></h1>
-  <div class="botoes">
-    <button class="mb laranja" id="go"><span class="ico" id="icoS"></span><span class="tx"><b id="goL">Um jogador</b><small>Treine sozinho e suba de nível</small></span></button>
-    <button class="mb azul" id="duelo"><span class="ico" id="icoM"></span><span class="tx"><b>Multijogador</b><small>Duelo ao vivo com um amigo</small></span></button>
-    <div class="linha">
-      <button class="mb verde peq" id="btPerfil">📊 Meu perfil</button>
-      <button class="mb amarelo peq" id="btComo">❓ Como jogar</button>
+<section id="s0" class="home">
+  <button class="somb" id="soms" aria-label="Ligar ou desligar o som"></button>
+  <div class="grade">
+    <div class="hero">
+      <h1><span class="c1">Cada escolha</span><span class="c2">muda o<br>planeta.</span></h1>
+      <p class="sub2">Separe os resíduos, marque pontos e descubra como pequenas atitudes fazem uma grande diferença.</p>
+      <div class="missao"><span class="mi">&#9851;&#xFE0E;</span><span class="mt"><b>Missão de hoje</b><small id="missaoT"></small></span></div>
+    </div>
+    <div class="cartao">
+      <div class="deco-quad" aria-hidden="true"></div>
+      <div class="lixo-deco" id="lixoDeco" aria-hidden="true"></div>
+      <p class="ola"><span id="ola">Olá!</span><button class="link" id="trocar" type="button">trocar nome</button></p>
+      <h2>Como você quer jogar?</h2>
+      <div class="nomebox" id="nomebox"><label for="nm0">Seu apelido (aparece no ranking)</label><input id="nm0" maxlength="14" placeholder="Seu apelido" autocomplete="off"></div>
+      <p id="nmErro" class="erro" role="alert" hidden></p>
+      <button class="opc ouro" id="go"><span class="tile"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span><span class="tx"><b id="goL">Um jogador</b><small>Treine sozinho e suba de nível</small></span><span class="seta"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></button>
+      <button class="opc azul" id="duelo"><span class="tile"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="tx"><b>Multijogador</b><small>Duelo ao vivo com um amigo</small></span><span class="vivo">AO VIVO</span><span class="seta"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span></button>
+      <div class="sec2">
+        <button class="opc2" id="btPerfil"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Meu perfil</button>
+        <button class="opc2" id="btComo"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Como jogar</button>
+      </div>
+      <div class="painel2" id="perfil" hidden></div>
+      <div class="painel2" id="como" hidden>
+        <p>Arraste o item até a lixeira certa. Também dá para tocar na lixeira ou usar as teclas numéricas. Três níveis: recicláveis, orgânicos e, por fim, rejeitos e resíduos perigosos.</p>
+        <p>As cores seguem o padrão CONAMA. Confira sempre as regras de coleta do seu município.</p>
+        <p>Cada nome é único. Depois de escolhido, só você poderá usá-lo neste aparelho.</p>
+      </div>
     </div>
   </div>
-  <div class="card painel" id="perfil" hidden></div>
-  <div class="card painel" id="como" hidden>
-    <p>Arraste o item até a lixeira certa. Também dá para tocar na lixeira ou usar as teclas numéricas. Três níveis: recicláveis, orgânicos e, por fim, rejeitos e resíduos perigosos.</p>
-    <p>As cores seguem o padrão CONAMA. Confira sempre as regras de coleta do seu município.</p>
-  </div>
-  <p class="nota" style="text-align:center;margin-top:16px">Cada nome é único. Depois de escolhido, só você poderá usá-lo neste aparelho.</p>
-  <p class="nota" style="text-align:center">Versão 12: diagnóstico do multijogador.</p>
+  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 13</span></footer>
 </section>
 
 <section id="s1" hidden>
@@ -221,7 +256,7 @@ const ICON={papel:"📄",plastico:"🧴",vidro:"🍾",metal:"🥫",organico:"�
 function can(k){const c=BINS[k].c;
  return `<svg viewBox="0 0 100 124" aria-hidden="true"><ellipse cx="50" cy="119" rx="38" ry="4" fill="#000" opacity=".15"/><rect x="20" y="97" width="60" height="6" rx="3" fill="${c}"/><rect x="20" y="97" width="60" height="6" rx="3" fill="#000" opacity=".25"/><path d="M14 30H86L80 99H20Z" fill="${c}"/><path d="M14 30H26L32 99H20Z" fill="#fff" opacity=".18"/><path d="M74 30H86L80 99H68Z" fill="#000" opacity=".18"/><path d="M40 38V92M60 38V92" stroke="#000" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="64" r="19" fill="#fff" opacity=".94"/><text x="50" y="72" font-size="23" text-anchor="middle">${ICON[k]}</text><g class="lidg"><rect x="8" y="17" width="84" height="13" rx="6" fill="${c}"/><rect x="8" y="17" width="84" height="13" rx="6" fill="#000" opacity=".2"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="${c}"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="#000" opacity=".2"/></g><circle cx="28" cy="110" r="9" fill="#2b3236"/><circle cx="72" cy="110" r="9" fill="#2b3236"/><circle cx="28" cy="110" r="3.5" fill="#9aa7ad"/><circle cx="72" cy="110" r="3.5" fill="#9aa7ad"/></svg>`}
 function show(id){document.body.classList.toggle("menu-on",id==="s0");["s0","s1","s2","s3"].forEach(k=>$("#"+k).hidden=k!==id)}
-function erroNome(m){const e=$("#nmErro");e.textContent=m;e.hidden=!m}
+function erroNome(m){const e=$("#nmErro");e.textContent=m;e.hidden=!m;if(m)$("#nomebox").hidden=false}
 async function prepara(){
   audio();
   const nm=($("#nm0").value||"").trim().replace(/\s+/g," ");
@@ -239,6 +274,7 @@ async function prepara(){
     $("#goL").textContent="Um jogador";bs.forEach(b=>b.disabled=false);
   }
   try{localStorage.setItem("lixo-nome",nm)}catch(e){}
+  $("#nomebox").hidden=true;pintaOla();
   return{nm,nomeOk};
 }
 function novoJogo(r,mp){
@@ -394,6 +430,11 @@ function pintaSom(){
   $("#somh").setAttribute("aria-pressed",MUDO?"true":"false");$("#soms").setAttribute("aria-pressed",MUDO?"true":"false");
 }
 function alterna(){MUDO=!MUDO;try{localStorage.setItem("lixo-mudo",MUDO?"1":"0")}catch(e){}pintaSom();if(!MUDO)SOM.pega()}
+function pintaOla(){const n=($("#nm0").value||"").trim();$("#ola").textContent=n?"Olá, "+n+"!":"Olá!"}
+function pintaMissao(){
+  const p=perfil(),m=(p.missao&&p.missao.d===hoje())?p.missao:{n:0,ok:false};
+  $("#missaoT").textContent=m.ok?"Missão cumprida! +50 XP":"Desviar 10 itens do aterro · "+Math.min(m.n,10)+"/10";
+}
 // PERFIL, XP, STREAK E IMPACTO (salvos neste aparelho)
 const TITULOS=["Reciclador Iniciante","Separador Atento","Eco-Aprendiz","Guardião do Descarte","Mestre da Coleta","Lenda Sustentável"];
 const PESO={papel:100,plastico:30,vidro:300,metal:15,organico:150,rejeito:50,perigoso:40}; // gramas por item: médias ilustrativas
@@ -407,7 +448,7 @@ function faixa(xp){const n=Math.floor(Math.sqrt(xp/150))+1,a=150*(n-1)**2,b=150*
 function impacto(it){let t=0,g=0;for(const k in it){t+=it[k];g+=it[k]*(PESO[k]||0)}return{t,g}}
 function barras(it){const mx=Math.max(1,...Object.values(it));return `<div class="imp">`+Object.keys(BINS).map(k=>{const n=it[k]||0;return `<div style="--c:${BINS[k].c}"><span>${BINS[k].n}</span><em><i style="width:${Math.round(n/mx*100)}%"></i></em><b>${n}</b></div>`}).join("")+`</div>`}
 const NOTA='<p class="nota">Estimativa com pesos médios por item. Serve para dar noção de escala, não é uma medição exata.</p>';
-function drawPerfil(){
+function drawPerfil(){pintaMissao();
   const p=perfil(),f=faixa(p.xp),im=impacto(p.itens),sk=(p.last===hoje()||p.last===ontem())?p.streak:0;
   $("#perfil").innerHTML=`<div class="row"><span>${TITULOS[Math.min(f.n-1,5)]}</span><span>Nível ${f.n}</span></div><div class="xp"><i style="width:${f.pct}%"></i></div><p style="margin:0">${p.xp} XP · faltam ${f.b-p.xp} para o nível ${f.n+1}</p><div class="stats"><div><b>🔥 ${sk}</b>${sk===1?"dia seguido":"dias seguidos"}</div><div><b>${im.t}</b>itens separados</div><div><b>${kg(im.g)}</b>estimativa</div></div>`+(im.t?`<h2>Seu impacto por material</h2>${barras(p.itens)}${NOTA}`:`<p class="nota">Jogue uma partida para começar a ganhar XP e acompanhar o seu impacto.</p>`);
 }
@@ -416,9 +457,13 @@ function fechaPerfil(){
   if(p.last!==h){p.streak=p.last===ontem()?p.streak+1:1;p.last=h}
   p.xp+=ganho;p.jogos++;p.melhor=Math.max(p.melhor,S.score);
   for(const k in S.stat){it[k]=S.stat[k].ok;p.itens[k]=(p.itens[k]||0)+S.stat[k].ok}
+  const m=(p.missao&&p.missao.d===h)?p.missao:{d:h,n:0,ok:false};let missaoNova=false;
+  m.n+=Object.keys(S.stat).filter(k=>k!=="rejeito").reduce((a,k)=>a+S.stat[k].ok,0);
+  if(!m.ok&&m.n>=10){m.ok=true;missaoNova=true;p.xp+=50}
+  p.missao=m;
   salvar(p);
   const d=faixa(p.xp),im=impacto(it);
-  $("#ep").innerHTML=`<h2>Progresso</h2><div class="row"><span>+${ganho} XP</span><span>${TITULOS[Math.min(d.n-1,5)]} · Nível ${d.n}</span></div><div class="xp"><i style="width:${d.pct}%"></i></div>${d.n>antes.n?`<p>🎉 Você subiu para o nível ${d.n}!</p>`:""}<p>🔥 ${p.streak} ${p.streak===1?"dia seguido":"dias seguidos"}${p.streak>1?". Volte amanhã para manter a sequência!":". Volte amanhã para começar uma sequência!"}</p><h2>Impacto desta partida</h2><p>Você separou corretamente <b>${S.ok}</b> ${S.ok===1?"item":"itens"}, cerca de <b>${kg(im.g)}</b>.</p>${barras(it)}${NOTA}`;
+  $("#ep").innerHTML=`<h2>Progresso</h2><div class="row"><span>+${ganho} XP</span><span>${TITULOS[Math.min(d.n-1,5)]} · Nível ${d.n}</span></div><div class="xp"><i style="width:${d.pct}%"></i></div>${d.n>antes.n?`<p>🎉 Você subiu para o nível ${d.n}!</p>`:""}${missaoNova?"<p>🎯 Missão do dia concluída! +50 XP</p>":""}<p>🔥 ${p.streak} ${p.streak===1?"dia seguido":"dias seguidos"}${p.streak>1?". Volte amanhã para manter a sequência!":". Volte amanhã para começar uma sequência!"}</p><h2>Impacto desta partida</h2><p>Você separou corretamente <b>${S.ok}</b> ${S.ok===1?"item":"itens"}, cerca de <b>${kg(im.g)}</b>.</p>${barras(it)}${NOTA}`;
 }
 // RANKING ONLINE (Supabase): a URL e a chave pública ficam no arquivo config.js.
 // Sem esse arquivo, o jogo usa só o ranking local deste aparelho.
@@ -547,7 +592,10 @@ document.addEventListener("keydown",e=>{
 try{$("#nm0").value=localStorage.getItem("lixo-nome")||""}catch(e){}
 drawPerfil();
 pintaSom();$("#somh").onclick=$("#soms").onclick=alterna;
-$("#icoS").innerHTML=can("vidro");$("#icoM").innerHTML=can("plastico")+'<i class="vs">VS</i>'+can("metal");
+$("#lixoDeco").innerHTML=can("vidro").replace("🍾","🌱");
+pintaOla();$("#nomebox").hidden=!!$("#nm0").value.trim();
+$("#nm0").addEventListener("input",pintaOla);
+$("#trocar").onclick=()=>{const b=$("#nomebox");b.hidden=!b.hidden;if(!b.hidden)$("#nm0").focus()};
 document.body.classList.add("menu-on");
 $("#btPerfil").onclick=()=>{const p=$("#perfil");p.hidden=!p.hidden;$("#como").hidden=true};
 $("#btComo").onclick=()=>{const p=$("#como");p.hidden=!p.hidden;$("#perfil").hidden=true};
