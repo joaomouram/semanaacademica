@@ -167,7 +167,7 @@ body.menu-on .cenario{display:block}
       </div>
     </div>
   </div>
-  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 13</span></footer>
+  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 14</span></footer>
 </section>
 
 <section id="s1" hidden>
@@ -256,6 +256,7 @@ const ICON={papel:"📄",plastico:"🧴",vidro:"🍾",metal:"🥫",organico:"�
 function can(k){const c=BINS[k].c;
  return `<svg viewBox="0 0 100 124" aria-hidden="true"><ellipse cx="50" cy="119" rx="38" ry="4" fill="#000" opacity=".15"/><rect x="20" y="97" width="60" height="6" rx="3" fill="${c}"/><rect x="20" y="97" width="60" height="6" rx="3" fill="#000" opacity=".25"/><path d="M14 30H86L80 99H20Z" fill="${c}"/><path d="M14 30H26L32 99H20Z" fill="#fff" opacity=".18"/><path d="M74 30H86L80 99H68Z" fill="#000" opacity=".18"/><path d="M40 38V92M60 38V92" stroke="#000" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="64" r="19" fill="#fff" opacity=".94"/><text x="50" y="72" font-size="23" text-anchor="middle">${ICON[k]}</text><g class="lidg"><rect x="8" y="17" width="84" height="13" rx="6" fill="${c}"/><rect x="8" y="17" width="84" height="13" rx="6" fill="#000" opacity=".2"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="${c}"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="#000" opacity=".2"/></g><circle cx="28" cy="110" r="9" fill="#2b3236"/><circle cx="72" cy="110" r="9" fill="#2b3236"/><circle cx="28" cy="110" r="3.5" fill="#9aa7ad"/><circle cx="72" cy="110" r="3.5" fill="#9aa7ad"/></svg>`}
 function show(id){document.body.classList.toggle("menu-on",id==="s0");["s0","s1","s2","s3"].forEach(k=>$("#"+k).hidden=k!==id)}
+let AVISOU=false;
 function erroNome(m){const e=$("#nmErro");e.textContent=m;e.hidden=!m;if(m)$("#nomebox").hidden=false}
 async function prepara(){
   audio();
@@ -270,7 +271,10 @@ async function prepara(){
       const r=await rpc("reservar_nome",{p_nome:nm,p_dono:DONO});
       if(r!=="ok"){$("#goL").textContent="Um jogador";bs.forEach(b=>b.disabled=false);erroNome("O nome “"+nm+"” não está disponível. Escolha outro.");return null}
       nomeOk=true;
-    }catch(e){}
+    }catch(e){
+      $("#goL").textContent="Um jogador";bs.forEach(b=>b.disabled=false);
+      if(!AVISOU){AVISOU=true;erroNome("Não foi possível verificar se o nome está disponível ("+(e&&e.message?e.message:"erro")+"). Toque de novo para jogar sem ranking online.");return null}
+    }
     $("#goL").textContent="Um jogador";bs.forEach(b=>b.disabled=false);
   }
   try{localStorage.setItem("lixo-nome",nm)}catch(e){}
@@ -473,7 +477,7 @@ const DONO=(()=>{let d=null;try{d=localStorage.getItem("lixo-dono");if(!d){d=nov
 const ONLINE=!!(CFG.url&&CFG.key&&DONO);
 async function rpc(fn,args){
   const res=await fetch(CFG.url.replace(/\/$/,"")+"/rest/v1/rpc/"+fn,{method:"POST",headers:{apikey:CFG.key,"Content-Type":"application/json"},body:JSON.stringify(args)});
-  if(!res.ok)throw new Error("falha");
+  if(!res.ok)throw new Error("HTTP "+res.status);
   return res.json();
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
