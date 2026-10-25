@@ -42,7 +42,6 @@ p{margin:0 0 12px;color:var(--mut)}
 .bin small{font-weight:500;opacity:.8}
 .bin:active{transform:translateY(2px)}
 .bin:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
-.btn{font:inherit;font-weight:800;font-size:1.05rem;border:0;border-radius:12px;padding:12px 22px;background:var(--ink);color:var(--bg);cursor:pointer;margin-top:8px}
 input{font:inherit;width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);margin:4px 0 8px}
 .stats{display:flex;gap:10px;margin:12px 0}
 .stats div{flex:1;background:var(--bg);border-radius:12px;padding:10px;text-align:center}
@@ -63,7 +62,6 @@ h1,h2,label,.sub{text-align:center}
 label{display:block}
 #eb,#ee{text-align:center}
 #again,#criar,#entrar{display:block;margin:14px auto 0}
-.btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
 .rival{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:6px 12px;margin-bottom:10px;font-weight:500;font-size:.88rem;text-align:center}
 .cod{font-size:2.6rem;font-weight:800;letter-spacing:.3em;text-align:center;margin:8px 0}
 .tag{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 12px;margin:0 6px 6px 0;font-size:.92rem}
@@ -77,7 +75,6 @@ body.menu-on{background:radial-gradient(rgba(255,255,255,.06) 1.5px,transparent 
 body.menu-on main{max-width:1180px;padding:0 24px;overflow-x:clip}
 main{position:relative;z-index:1}
 .cenario{display:none;position:fixed;left:0;right:0;bottom:0;height:170px;pointer-events:none;z-index:0;overflow:hidden}
-body.menu-on .cenario{display:block}
 .colina{position:absolute;border-radius:50%}
 .colina.c1{left:-15%;width:130%;height:320px;bottom:-165px;background:#5a9438}
 .colina.c2{left:-25%;width:150%;height:320px;bottom:-235px;background:#0f6a45}
@@ -133,6 +130,28 @@ body.menu-on .cenario{display:block}
 .rodape{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0 22px;font-weight:800;font-size:.85rem;color:#f1eedf;text-shadow:0 1px 3px rgba(0,0,0,.4)}
 @media (max-width:899px){.cartao{justify-self:stretch;max-width:none}.home .somb{top:12px}}
 @media (max-width:480px){.cartao>h2{font-size:1.6rem}.opc{padding:14px 12px;gap:10px}.vivo{display:none}.arvores{display:none}.tile{width:46px;height:46px}}
+body{--bg:#151813;--card:#1d211d;--ink:#e6e0cf;--mut:#b7b4a2;--line:#3a4630;--ok:#6fdc9a;--bad:#ff9b8c;background:radial-gradient(rgba(255,255,255,.06) 1.5px,transparent 1.6px) 0 0/22px 22px,#2a3a10;color:#e6e0cf;font-family:"Nunito","Bricolage Grotesque",system-ui,sans-serif;font-weight:600}
+h1,h2{font-family:"Baloo 2","Nunito",system-ui,sans-serif;color:#d8d3c6}
+.btn{font:inherit;font-weight:800;font-size:1rem;letter-spacing:.04em;text-transform:uppercase;border:0;border-radius:16px;padding:14px 26px;background:#7a5700;color:#e6e0cf;box-shadow:0 6px 0 #c28a12;cursor:pointer;margin-top:8px;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #c28a12}
+.btn.sec{background:#2b3b10;color:#d8e8c0;border:2px solid #4f7a2a;box-shadow:none}
+.btn.sec:active{box-shadow:none}
+.card{box-shadow:0 14px 40px rgba(0,0,0,.3);border-radius:18px}
+.item .nm{font-family:"Baloo 2","Nunito",system-ui,sans-serif;font-size:1.7rem;color:#d8d3c6}
+.bar{height:12px}
+#hs{color:#7ee8b0}#hc{color:#ffc857}
+.hud .cw{background:none;border:0;padding:0;font-size:inherit}
+.stats div{border:1px solid var(--line)}
+.stats b,.cod{font-family:"Baloo 2","Nunito",system-ui,sans-serif}
+.cod{color:#7ee8b0}
+body.cena .cenario{display:block}
+.relogio{position:relative;display:flex;justify-content:center;align-items:center;margin-bottom:4px}
+#clk{font-family:"Baloo 2","Nunito",system-ui,sans-serif;font-size:2.3rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;color:#7ee8b0}
+#clk.baixo{color:var(--bad);animation:pulsa .5s infinite alternate}
+@keyframes pulsa{to{transform:scale(1.12)}}
+.pen{position:absolute;left:calc(50% + 46px);top:6px;color:var(--bad);font-weight:800;font-size:1.2rem;opacity:0;transition:opacity .8s,transform .8s}
+.pen.vai{opacity:1;transform:translateY(-6px);transition:none}
+@media (prefers-reduced-motion:reduce){#clk.baixo{animation:none}.pen{transition:none}}
 </style>
 </head>
 <body>
@@ -165,18 +184,20 @@ body.menu-on .cenario{display:block}
       <div class="painel2" id="perfil" hidden></div>
       <div class="painel2" id="como" hidden>
         <p>Arraste o item até a lixeira certa. Também dá para tocar na lixeira ou usar as teclas numéricas. Três níveis: recicláveis, orgânicos e, por fim, rejeitos e resíduos perigosos.</p>
+        <p>O relógio corre o tempo todo: cada erro tira 5 segundos, e o tempo que sobrar no fim de um nível vira bônus de pontos. Se o tempo acabar, o jogo termina.</p>
         <p>As cores seguem o padrão CONAMA. Confira sempre as regras de coleta do seu município.</p>
         <p>Cada nome é único. Depois de escolhido, só você poderá usá-lo neste aparelho.</p>
       </div>
     </div>
   </div>
-  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 15</span></footer>
+  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 17</span></footer>
 </section>
 
 <section id="s1" hidden>
-  <div class="hud"><span id="hl"></span><span id="hh"></span><span id="hs"></span><span id="hc"></span><button class="somb" id="somh" aria-label="Ligar ou desligar o som"></button></div>
+  <div class="hud"><span id="hl"></span><span id="hs"></span><span id="hc"></span><button class="somb" id="somh" aria-label="Ligar ou desligar o som"></button></div>
   <div id="rival" class="rival" hidden></div>
   <div class="card item" id="card">
+    <div class="relogio"><span id="clk" role="timer">0:00</span><span id="pen" class="pen" aria-hidden="true"></span></div>
     <div class="emo" id="emo" aria-hidden="true"></div>
     <div class="nm" id="inm"></div>
     <div class="bar"><i id="tb"></i></div>
@@ -224,9 +245,10 @@ body.menu-on .cenario{display:block}
 <script>
 const BINS={papel:{n:"Papel",c:"#1d6fd1",t:"#fff"},plastico:{n:"Plástico",c:"#d6322e",t:"#fff"},vidro:{n:"Vidro",c:"#1f8a4c",t:"#fff"},metal:{n:"Metal",c:"#f2b705",t:"#1b1f23"},organico:{n:"Orgânico",c:"#7a4b2a",t:"#fff"},rejeito:{n:"Rejeito",c:"#5f6b74",t:"#fff"},perigoso:{n:"Perigoso",c:"#ee7d11",t:"#1b1f23"}};
 const LV=[
- {cats:["papel","plastico","vidro","metal"],time:9},
- {cats:["papel","plastico","vidro","metal","organico"],time:7},
- {cats:["papel","plastico","vidro","metal","organico","rejeito","perigoso"],time:6}];
+ {cats:["papel","plastico","vidro","metal"],tempo:30},
+ {cats:["papel","plastico","vidro","metal","organico"],tempo:40},
+ {cats:["papel","plastico","vidro","metal","organico","rejeito","perigoso"],tempo:45}];
+const PENAL=5;
 const ITEMS=[
 ["📰","Jornal velho","papel",0,"Papel limpo e seco vai na lixeira azul."],
 ["📦","Caixa de papelão","papel",0,"Desmonte a caixa para ocupar menos espaço."],
@@ -258,7 +280,7 @@ let S,timer;
 const ICON={papel:"📄",plastico:"🧴",vidro:"🍾",metal:"🥫",organico:"🍎",rejeito:"🚫",perigoso:"⚠️"};
 function can(k){const c=BINS[k].c;
  return `<svg viewBox="0 0 100 124" aria-hidden="true"><ellipse cx="50" cy="119" rx="38" ry="4" fill="#000" opacity=".15"/><rect x="20" y="97" width="60" height="6" rx="3" fill="${c}"/><rect x="20" y="97" width="60" height="6" rx="3" fill="#000" opacity=".25"/><path d="M14 30H86L80 99H20Z" fill="${c}"/><path d="M14 30H26L32 99H20Z" fill="#fff" opacity=".18"/><path d="M74 30H86L80 99H68Z" fill="#000" opacity=".18"/><path d="M40 38V92M60 38V92" stroke="#000" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="64" r="19" fill="#fff" opacity=".94"/><text x="50" y="72" font-size="23" text-anchor="middle">${ICON[k]}</text><g class="lidg"><rect x="8" y="17" width="84" height="13" rx="6" fill="${c}"/><rect x="8" y="17" width="84" height="13" rx="6" fill="#000" opacity=".2"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="${c}"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="#000" opacity=".2"/></g><circle cx="28" cy="110" r="9" fill="#2b3236"/><circle cx="72" cy="110" r="9" fill="#2b3236"/><circle cx="28" cy="110" r="3.5" fill="#9aa7ad"/><circle cx="72" cy="110" r="3.5" fill="#9aa7ad"/></svg>`}
-function show(id){document.body.classList.toggle("menu-on",id==="s0");["s0","s1","s2","s3"].forEach(k=>$("#"+k).hidden=k!==id)}
+function show(id){document.body.classList.toggle("menu-on",id==="s0");document.body.classList.toggle("cena",id==="s0"||id==="s2"||id==="s3");["s0","s1","s2","s3"].forEach(k=>$("#"+k).hidden=k!==id)}
 let AVISOU=false;
 function erroNome(m){const e=$("#nmErro");e.textContent=m;e.hidden=!m;if(m)$("#nomebox").hidden=false}
 async function prepara(){
@@ -299,75 +321,83 @@ function monta(n){
 }
 function semente(s){let a=s>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function level(n){
-  S.lv=n;S.i=0;S.perfect=true;
+  S.lv=n;S.i=0;S.perfect=true;S.left=LV[n].tempo;S.max=S.left;S.ultSec=99;
   S.q=S.qs?S.qs[n]:monta(n);
   $("#bins").innerHTML=LV[n].cats.map((k,j)=>`<button class="bin" data-k="${k}" aria-label="Lixeira ${BINS[k].n}">${can(k)}<span class="lb"><small>${j+1}</small>${BINS[k].n}</span></button>`).join("");
-  show("s1");next();
+  show("s1");fbPadrao();next();corre();
+}
+function fbPadrao(){fb("",'<span style="color:var(--mut)">Arraste o item até a lixeira certa.</span>')}
+function relogio(){
+  const s=Math.max(0,Math.ceil(S.left));
+  $("#clk").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+  $("#clk").classList.toggle("baixo",S.left<=8);
+  const p=Math.max(0,S.left/S.max*100),b=$("#tb");
+  b.style.width=p+"%";b.style.background=p<30?"var(--bad)":"var(--ok)";
+}
+function penalidade(){
+  const e=$("#pen");e.textContent="−"+PENAL+"s";e.classList.add("vai");
+  clearTimeout(S.penT);S.penT=setTimeout(()=>e.classList.remove("vai"),700);
+}
+function corre(){
+  clearInterval(timer);S.ult=performance.now();
+  timer=setInterval(()=>{
+    const agora=performance.now();S.left-=(agora-S.ult)/1000;S.ult=agora;
+    const sec=Math.ceil(S.left);if(sec<=5&&sec>0&&sec!==S.ultSec){S.ultSec=sec;SOM.alerta()}
+    if(S.left<=0){S.left=0;relogio();finish(false);return}
+    relogio();
+  },100);
 }
 function hud(){
   $("#hl").textContent="Nível "+(S.lv+1)+"/3";
-  $("#hh").textContent="♥".repeat(S.lives)+"♡".repeat(3-S.lives);
   $("#hs").textContent=S.score+" pts";
   $("#hc").innerHTML='<span class="cw">Combo </span>×'+(1+Math.min(3,Math.floor(S.combo/3)));
-  if(S.mp){envia("placar",{s:S.score,v:S.lives});pintaRival()}
+  if(S.mp){envia("placar",{s:S.score,t:Math.ceil(S.left||0)});pintaRival()}
 }
 function fb(cls,html){const f=$("#fb");f.className=cls;f.innerHTML=html}
 function next(){
   if(S.i>=S.q.length)return levelEnd();
-  const it=S.q[S.i];S.lock=false;
+  const it=S.q[S.i];S.lock=false;S.t0=performance.now();
   $("#emo").textContent=it[0];$("#inm").textContent=it[1];
-  fb("",'<span style="color:var(--mut)">Arraste o item até a lixeira certa.</span>');
-  S.left=LV[S.lv].time;S.max=S.left;S.ultSec=99;hud();
-  clearInterval(timer);
-  timer=setInterval(()=>{
-    S.left-=.1;
-    const p=Math.max(0,S.left/S.max*100),b=$("#tb");
-    b.style.width=p+"%";b.style.background=p<30?"var(--bad)":"var(--ok)";
-    const sec=Math.ceil(S.left);if(sec<=3&&sec>0&&sec!==S.ultSec){S.ultSec=sec;SOM.alerta()}
-    if(S.left<=0)answer(null);
-  },100);
+  hud();relogio();
 }
 function answer(k){
-  if(S.lock)return;S.lock=true;clearInterval(timer);
+  if(S.lock||performance.now()-S.t0<120)return;
   const it=S.q[S.i],cat=it[2];
   const st=S.stat[cat]||(S.stat[cat]={ok:0,err:0});
   S.tot++;
   if(k===cat){
     st.ok++;S.ok++;S.combo++;S.best=Math.max(S.best,S.combo);
     if(S.combo>=5)S.badges.add("Sequência de 5");
-    const pts=(100+Math.ceil(S.left*10))*(1+Math.min(3,Math.floor(S.combo/3)));
-    S.score+=pts;hud();SOM.acerto(S.combo);
+    const el=(performance.now()-S.t0)/1000;
+    const pts=(100+Math.max(0,Math.round((4-el)*25)))*(1+Math.min(3,Math.floor(S.combo/3)));
+    S.score+=pts;SOM.acerto(S.combo);
     fb("ok",`<b>Certo! +${pts} pontos</b>${it[4]}`);
-    setTimeout(adv,1300);
   }else{
-    st.err++;S.combo=0;S.lives--;S.perfect=false;hud();k?SOM.erro():SOM.tempo();
+    st.err++;S.combo=0;S.perfect=false;S.left-=PENAL;penalidade();SOM.erro();
     $("#card").classList.remove("shake");void $("#card").offsetWidth;$("#card").classList.add("shake");
-    fb("bad",`<b>${k?"Ops!":"Tempo esgotado!"} Era ${BINS[cat].n}.</b>${it[4]}<br><button class="btn" id="cont">Continuar</button>`);
-    $("#cont").focus();$("#cont").onclick=adv;
+    fb("bad",`<b>Ops! Era ${BINS[cat].n}. −${PENAL}s</b>${it[4]}`);
   }
-}
-function adv(){
-  if(!S.lock)return;
-  S.i++;
-  if(S.lives<=0)return finish(false);
-  next();
+  clearTimeout(S.fbT);S.fbT=setTimeout(fbPadrao,k===cat?1800:3800);
+  if(S.left<=0){S.left=0;relogio();return finish(false)}
+  S.i++;next();
 }
 function levelEnd(){
+  clearInterval(timer);clearTimeout(S.fbT);
   if(S.perfect)S.badges.add("Nível "+(S.lv+1)+" sem erros");
+  const bonus=Math.max(0,Math.floor(S.left))*10;S.score+=bonus;hud();
   if(S.lv<2){
-    SOM.nivel();
-    S.lock=true;
-    fb("ok",`<b>Nível ${S.lv+1} concluído!</b>Próximo: ${S.lv?"rejeitos e resíduos perigosos":"orgânicos"}.<br><button class="btn" id="cont">Ir para o nível ${S.lv+2}</button>`);
+    SOM.nivel();S.lock=true;
+    fb("ok",`<b>Nível ${S.lv+1} concluído! +${bonus} pts de bônus de tempo</b>Próximo: ${S.lv?"rejeitos e resíduos perigosos":"orgânicos"}.<br><button class="btn" id="cont">Ir para o nível ${S.lv+2}</button>`);
     $("#cont").focus();$("#cont").onclick=()=>level(S.lv+1);
   }else finish(true);
 }
 function finish(won){
-  clearInterval(timer);
+  clearInterval(timer);clearTimeout(S.fbT);
   won?SOM.vitoria():SOM.derrota();
   const acc=S.tot?S.ok/S.tot:0;
   if(won)S.badges.add("Reciclador completo");
   if(won&&acc>=.9)S.badges.add("Pontaria de 90%");
-  $("#et").textContent=won?"Você zerou o jogo!":"Fim de jogo";
+  $("#et").textContent=won?"Você zerou o jogo!":"Tempo esgotado!";
   $("#e1").textContent=S.score;$("#e2").textContent=Math.round(acc*100)+"%";$("#e3").textContent=S.best;
   $("#eb").innerHTML=S.badges.size?[...S.badges].map(b=>`<span class="tag">🏅 ${b}</span>`).join(""):"<p>Nenhuma conquista desta vez. Tente uma sequência de 5 acertos.</p>";
   const erros=Object.entries(S.stat).filter(e=>e[1].err).sort((a,b)=>b[1].err-a[1].err);
@@ -571,13 +601,13 @@ function recebe(ev,p){
   }else if(ev==="convite"&&L&&L.papel==="guest"&&!L.rival){
     clearTimeout(L.espera);L.rival=p.host||"Rival";L.seed=p.seed;contagem();
   }else if(ev==="placar"&&MPS){
-    MPS.s=p.s;MPS.v=p.v;pintaRival();if(!$("#s2").hidden)fimDuelo();
+    MPS.s=p.s;MPS.t=p.t;pintaRival();if(!$("#s2").hidden)fimDuelo();
   }else if(ev==="fim"&&MPS){
     MPS.s=p.s;MPS.fim=true;pintaRival();if(!$("#s2").hidden)fimDuelo();
   }
 }
 function contagem(){
-  MPS={nome:L.rival,s:0,v:3,fim:false,parcial:false,bonus:false,som:false};
+  MPS={nome:L.rival,s:0,t:0,fim:false,parcial:false,bonus:false,som:false};
   $("#lob0").hidden=true;$("#lob1").hidden=false;$("#lobmsg").textContent="Rival: "+L.rival;
   const passos=["3","2","1","Já!"];let i=0;
   const t=()=>{
@@ -590,8 +620,8 @@ function contagem(){
 }
 function pintaRival(){
   if(!MPS||!S||!S.mp)return;
-  const r=MPS.s,eu=S.score,vid="♥".repeat(Math.max(0,MPS.v))+"♡".repeat(Math.max(0,3-MPS.v));
-  $("#rival").innerHTML=`⚔️ ${esc(MPS.nome)}: <b>${r}</b> pts <span style="color:var(--bad)">${vid}</span> · ${eu>r?"você está na frente":eu<r?"você está atrás":"empatados"}`;
+  const r=MPS.s,eu=S.score;
+  $("#rival").innerHTML=`⚔️ ${esc(MPS.nome)}: <b>${r}</b> pts · ⏱ ${MPS.t}s · ${eu>r?"você está na frente":eu<r?"você está atrás":"empatados"}`;
 }
 function fimDuelo(){
   if(!MPS||!S||!S.mp)return;
@@ -628,7 +658,7 @@ pintaOla();$("#nomebox").hidden=!!$("#nm0").value.trim();
 $("#nm0").addEventListener("input",pintaOla);
 $("#nm0").addEventListener("input",checaNome);
 $("#trocar").onclick=()=>{const b=$("#nomebox");b.hidden=!b.hidden;if(!b.hidden){$("#nm0").focus();checaNome()}};
-document.body.classList.add("menu-on");
+document.body.classList.add("menu-on","cena");
 $("#btPerfil").onclick=()=>{const p=$("#perfil");p.hidden=!p.hidden;$("#como").hidden=true};
 $("#btComo").onclick=()=>{const p=$("#como");p.hidden=!p.hidden;$("#perfil").hidden=true};
 </script>
