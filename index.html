@@ -152,6 +152,9 @@ body.cena .cenario{display:block}
 .pen{position:absolute;left:calc(50% + 46px);top:6px;color:var(--bad);font-weight:800;font-size:1.2rem;opacity:0;transition:opacity .8s,transform .8s}
 .pen.vai{opacity:1;transform:translateY(-6px);transition:none}
 @media (prefers-reduced-motion:reduce){#clk.baixo{animation:none}.pen{transition:none}}
+.bin.novo{animation:troca .28s ease-out}
+@keyframes troca{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.bin.novo{animation:none}}
 </style>
 </head>
 <body>
@@ -185,12 +188,13 @@ body.cena .cenario{display:block}
       <div class="painel2" id="como" hidden>
         <p>Arraste o item até a lixeira certa. Também dá para tocar na lixeira ou usar as teclas numéricas. Três níveis: recicláveis, orgânicos e, por fim, rejeitos e resíduos perigosos.</p>
         <p>O relógio corre o tempo todo: cada erro tira 5 segundos, e o tempo que sobrar no fim de um nível vira bônus de pontos. Se o tempo acabar, o jogo termina.</p>
+        <p>A cada acerto, as lixeiras trocam de lugar. Guie-se pela cor e pelo nome, não pela posição.</p>
         <p>As cores seguem o padrão CONAMA. Confira sempre as regras de coleta do seu município.</p>
         <p>Cada nome é único. Depois de escolhido, só você poderá usá-lo neste aparelho.</p>
       </div>
     </div>
   </div>
-  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 18</span></footer>
+  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 19</span></footer>
 </section>
 
 <section id="s1" hidden>
@@ -249,6 +253,7 @@ const LV=[
  {cats:["papel","plastico","vidro","metal","organico"],tempo:40},
  {cats:["papel","plastico","vidro","metal","organico","rejeito","perigoso"],tempo:45}];
 const PENAL=5;
+const TROCA_NIVEL=0; // a partir de qual nível (0 = nível 1) as lixeiras trocam de lugar a cada acerto
 const ITEMS=[
 ["📰","Jornal velho","papel",0,"Papel limpo e seco vai na lixeira azul."],
 ["📦","Caixa de papelão","papel",0,"Desmonte a caixa para ocupar menos espaço."],
@@ -308,7 +313,11 @@ async function prepara(){
 }
 function novoJogo(r,mp){
   S={nm:r.nm,nomeOk:r.nomeOk,lv:0,i:0,score:0,combo:0,best:0,lives:3,stat:{},lock:false,perfect:true,badges:new Set(),ok:0,tot:0,mp:mp||null};
-  if(mp){RND=semente(mp.seed);S.qs=[monta(0),monta(1),monta(2)];RND=Math.random}
+  if(mp){
+    RND=semente(mp.seed);S.qs=[monta(0),monta(1),monta(2)];
+    S.ordens=[0,1,2].map(n=>{const o=[LV[n].cats.slice()];for(let i=0;i<S.qs[n].length;i++)o.push(novaOrdem(LV[n].cats,o[i]));return o});
+    RND=Math.random;
+  }
   $("#rival").hidden=!mp;
   level(0);
   if(mp)pintaRival();
@@ -320,10 +329,20 @@ function monta(n){
   return sh(novos.concat(velhos));
 }
 function semente(s){let a=s>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function novaOrdem(cats,atual){
+  let o;let t=0;
+  do{o=sh(cats.slice());t++}while(cats.length>1&&o.join()===atual.join()&&t<20);
+  return o;
+}
+function desenhaBins(anima){
+  $("#bins").innerHTML=S.ord.map((k,j)=>`<button class="bin${anima?" novo":""}" data-k="${k}" aria-label="Lixeira ${BINS[k].n}">${can(k)}<span class="lb"><small>${j+1}</small>${BINS[k].n}</span></button>`).join("");
+  if(anima)SOM.troca();
+}
 function level(n){
   S.lv=n;S.i=0;S.perfect=true;S.left=LV[n].tempo;S.max=S.left;S.ultSec=99;
   S.q=S.qs?S.qs[n]:monta(n);
-  $("#bins").innerHTML=LV[n].cats.map((k,j)=>`<button class="bin" data-k="${k}" aria-label="Lixeira ${BINS[k].n}">${can(k)}<span class="lb"><small>${j+1}</small>${BINS[k].n}</span></button>`).join("");
+  S.nk=0;S.ord=LV[n].cats.slice();
+  desenhaBins(false);
   show("s1");fbPadrao();next();corre();
 }
 function fbPadrao(){fb("",'<span style="color:var(--mut)">Arraste o item até a lixeira certa.</span>')}
@@ -371,6 +390,7 @@ function answer(k){
     const el=(performance.now()-S.t0)/1000;
     const pts=(100+Math.max(0,Math.round((4-el)*25)))*(1+Math.min(3,Math.floor(S.combo/3)));
     S.score+=pts;SOM.acerto(S.combo);
+    if(S.lv>=TROCA_NIVEL){S.nk++;S.ord=S.ordens?S.ordens[S.lv][S.nk]:novaOrdem(LV[S.lv].cats,S.ord);desenhaBins(true)}
     fb("ok",`<b>Certo! +${pts} pontos</b>${it[4]}`);
   }else{
     st.err++;S.combo=0;S.perfect=false;S.left-=PENAL;penalidade();SOM.erro();
@@ -459,6 +479,7 @@ const SOM={
   tempo(){tom(300,0,.18,"square",.07,150);tom(200,.18,.25,"square",.07,100)},
   nivel(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>tom(f,i*.1,.18,"triangle",.14))},
   vitoria(){[523.25,659.25,783.99,1046.5,783.99,1046.5,1318.5].forEach((f,i)=>tom(f,i*.12,.22,"triangle",.15))},
+  troca(){tom(700,0,.05,"triangle",.06);tom(500,.05,.06,"triangle",.06)},
   derrota(){[392,349.23,311.13,261.63].forEach((f,i)=>tom(f,i*.18,.3,"triangle",.14))}
 };
 function pintaSom(){
@@ -648,7 +669,7 @@ document.addEventListener("keydown",e=>{
   if($("#s1").hidden)return;
   if(e.key==="m"||e.key==="M"){alterna();return}
   const n=+e.key;
-  if(n>=1&&n<=LV[S.lv].cats.length&&!S.lock)answer(LV[S.lv].cats[n-1]);
+  if(n>=1&&n<=S.ord.length&&!S.lock)answer(S.ord[n-1]);
 });
 try{$("#nm0").value=localStorage.getItem("lixo-nome")||""}catch(e){}
 drawPerfil();
