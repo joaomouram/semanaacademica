@@ -190,7 +190,7 @@ body.cena .cenario{display:block}
       </div>
     </div>
   </div>
-  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 17</span></footer>
+  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 18</span></footer>
 </section>
 
 <section id="s1" hidden>
@@ -278,8 +278,8 @@ const sh=a=>a.map(x=>[RND(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
 let S,timer;
 
 const ICON={papel:"📄",plastico:"🧴",vidro:"🍾",metal:"🥫",organico:"🍎",rejeito:"🚫",perigoso:"⚠️"};
-function can(k){const c=BINS[k].c;
- return `<svg viewBox="0 0 100 124" aria-hidden="true"><ellipse cx="50" cy="119" rx="38" ry="4" fill="#000" opacity=".15"/><rect x="20" y="97" width="60" height="6" rx="3" fill="${c}"/><rect x="20" y="97" width="60" height="6" rx="3" fill="#000" opacity=".25"/><path d="M14 30H86L80 99H20Z" fill="${c}"/><path d="M14 30H26L32 99H20Z" fill="#fff" opacity=".18"/><path d="M74 30H86L80 99H68Z" fill="#000" opacity=".18"/><path d="M40 38V92M60 38V92" stroke="#000" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="64" r="19" fill="#fff" opacity=".94"/><text x="50" y="72" font-size="23" text-anchor="middle">${ICON[k]}</text><g class="lidg"><rect x="8" y="17" width="84" height="13" rx="6" fill="${c}"/><rect x="8" y="17" width="84" height="13" rx="6" fill="#000" opacity=".2"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="${c}"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="#000" opacity=".2"/></g><circle cx="28" cy="110" r="9" fill="#2b3236"/><circle cx="72" cy="110" r="9" fill="#2b3236"/><circle cx="28" cy="110" r="3.5" fill="#9aa7ad"/><circle cx="72" cy="110" r="3.5" fill="#9aa7ad"/></svg>`}
+function can(k,ic){const c=BINS[k].c;
+ return `<svg viewBox="0 0 100 124" aria-hidden="true"><ellipse cx="50" cy="119" rx="38" ry="4" fill="#000" opacity=".15"/><rect x="20" y="97" width="60" height="6" rx="3" fill="${c}"/><rect x="20" y="97" width="60" height="6" rx="3" fill="#000" opacity=".25"/><path d="M14 30H86L80 99H20Z" fill="${c}"/><path d="M14 30H26L32 99H20Z" fill="#fff" opacity=".18"/><path d="M74 30H86L80 99H68Z" fill="#000" opacity=".18"/><path d="M40 38V92M60 38V92" stroke="#000" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/>${ic?`<circle cx="50" cy="64" r="19" fill="#fff" opacity=".94"/><text x="50" y="72" font-size="23" text-anchor="middle">${ic}</text>`:""}<g class="lidg"><rect x="8" y="17" width="84" height="13" rx="6" fill="${c}"/><rect x="8" y="17" width="84" height="13" rx="6" fill="#000" opacity=".2"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="${c}"/><rect x="36" y="9" width="28" height="9" rx="4.5" fill="#000" opacity=".2"/></g><circle cx="28" cy="110" r="9" fill="#2b3236"/><circle cx="72" cy="110" r="9" fill="#2b3236"/><circle cx="28" cy="110" r="3.5" fill="#9aa7ad"/><circle cx="72" cy="110" r="3.5" fill="#9aa7ad"/></svg>`}
 function show(id){document.body.classList.toggle("menu-on",id==="s0");document.body.classList.toggle("cena",id==="s0"||id==="s2"||id==="s3");["s0","s1","s2","s3"].forEach(k=>$("#"+k).hidden=k!==id)}
 let AVISOU=false;
 function erroNome(m){const e=$("#nmErro");e.textContent=m;e.hidden=!m;if(m)$("#nomebox").hidden=false}
@@ -653,7 +653,7 @@ document.addEventListener("keydown",e=>{
 try{$("#nm0").value=localStorage.getItem("lixo-nome")||""}catch(e){}
 drawPerfil();
 pintaSom();$("#somh").onclick=$("#soms").onclick=alterna;
-$("#lixoDeco").innerHTML=can("vidro").replace("🍾","🌱");
+$("#lixoDeco").innerHTML=can("vidro","🌱");
 pintaOla();$("#nomebox").hidden=!!$("#nm0").value.trim();
 $("#nm0").addEventListener("input",pintaOla);
 $("#nm0").addEventListener("input",checaNome);
