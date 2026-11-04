@@ -366,7 +366,7 @@ body.fim input{background:#fff;border:2px solid #cfe1c1;color:#164a35}
       </div>
     </div>
   </div>
-  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 24</span></footer>
+  <footer class="rodape"><span>Jogue. Aprenda. Transforme.</span><span>Projeto acadêmico • Versão 27</span></footer>
 </section>
 
 <section id="s1" hidden>
@@ -424,7 +424,7 @@ body.fim input{background:#fff;border:2px solid #cfe1c1;color:#164a35}
   </div>
 </dialog>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js" integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK" crossorigin="anonymous"></script>
 <script src="config.js?v=12"></script>
 <script>
 const BINS={papel:{n:"Papel",c:"#1d6fd1",t:"#fff"},plastico:{n:"Plástico",c:"#d6322e",t:"#fff"},vidro:{n:"Vidro",c:"#1f8a4c",t:"#fff"},metal:{n:"Metal",c:"#f2b705",t:"#1b1f23"},organico:{n:"Orgânico",c:"#7a4b2a",t:"#fff"},rejeito:{n:"Rejeito",c:"#5f6b74",t:"#fff"},perigoso:{n:"Perigoso",c:"#ee7d11",t:"#1b1f23"}};
@@ -667,7 +667,7 @@ function coachTuto(){
   else{c.innerHTML="Agora sem brilho: guie-se pela <b>cor</b> e pelo <b>nome</b> da lixeira. Erros tiram "+PENAL+" s do relógio!";marcaAlvo(null);S.coachT=setTimeout(()=>{if(S&&S.tuto)$("#coach").hidden=true},4500)}
 }
 function finishTuto(){
-  clearInterval(timer);clearTimeout(S.fbT);clearTimeout(S.coachT);
+  clearInterval(timer);clearTimeout(S.fbT);clearTimeout(S.coachT);S.lock=true;
   marcaAlvo(null);$("#coach").hidden=true;
   try{localStorage.setItem("lixo-tuto-v1","1")}catch(e){}
   S.ok>0?SOM.vitoria():SOM.tempo();
@@ -910,7 +910,7 @@ function drawRank(){
   const verTog=onl&&RK.semOk;
   $("#rkTog").hidden=!verTog;$("#mTog").hidden=!verTog;
   for(const [a,b] of [["rkSem","rkGer"],["mSem","mGer"]]){$("#"+a).classList.toggle("on",modo==="semana");$("#"+b).classList.toggle("on",modo==="geral")}
-  const nota=onl?"":(RK.carregando?"Carregando o ranking geral...":"Ranking deste aparelho");
+  const nota=onl?(RK.aviso||""):(RK.carregando?"Carregando o ranking geral...":(RK.aviso?RK.aviso+" Mostrando o ranking deste aparelho.":"Ranking deste aparelho"));
   $("#rkNota").textContent=nota;$("#mNota").textContent=nota;
   const eu=RK.eu.toLowerCase();
   const pos=lista.findIndex(x=>x.name.toLowerCase()===eu);
@@ -934,7 +934,7 @@ function abreRank(){
   d.showModal();
   const eu=$("#mLista .lin.eu");if(eu)eu.scrollIntoView({block:"center"});
 }
-async function carregaRank(modo){
+async function carregaRankLegado(modo){
   const q="?select=name,score&order=score.desc&limit=300"+(modo==="semana"?"&created_at=gte."+encodeURIComponent(new Date(Date.now()-7*864e5).toISOString()):"");
   const res=await fetch(CFG.url.replace(/\/$/,"")+"/rest/v1/scores"+q,{headers:{apikey:CFG.key}});
   if(!res.ok)throw new Error("HTTP "+res.status);
@@ -942,11 +942,23 @@ async function carregaRank(modo){
   for(const x of await res.json()){const k=x.name.toLowerCase();if(!vistos.has(k)){vistos.add(k);d.push(x)}}
   return d;
 }
+async function carregaRank(modo){
+  try{
+    const d=await rpc("ranking",{p_periodo:modo,p_limite:200});
+    if(!Array.isArray(d))throw new Error("resposta inesperada");
+    return d.map(x=>({name:String(x.name),score:Number(x.score)}));
+  }catch(e){return carregaRankLegado(modo)}
+}
 async function online(eu){
   const meu=RK.tok;RK.carregando=true;drawRank();
   const enviar=S.nomeOk;
   try{
-    if(enviar)await rpc("enviar_pontos",{p_nome:eu.n,p_dono:DONO,p_pontos:eu.s}).catch(()=>{});
+    if(enviar){
+      let ok=false;
+      try{ok=(await rpc("enviar_pontos",{p_nome:eu.n,p_dono:DONO,p_pontos:eu.s}))===true}catch(e){}
+      if(RK.tok!==meu)return;
+      if(!ok)RK.aviso="Sua pontuação não foi enviada ao ranking online (o servidor recusou ou não respondeu).";
+    }else RK.aviso="Esta partida não foi enviada ao ranking online porque o nome não foi verificado.";
     const g=await carregaRank("geral");if(RK.tok!==meu)return;
     RK.geral=g;RK.ok=true;
     try{const w=await carregaRank("semana");if(RK.tok!==meu)return;RK.semana=w;RK.semOk=true;RK.modo="semana"}catch(e){RK.semOk=false;RK.modo="geral"}
@@ -1066,9 +1078,14 @@ $("#btComo").onclick=()=>{const p=$("#como");p.hidden=!p.hidden;$("#perfil").hid
 $("#btTuto").onclick=()=>{$("#como").hidden=true;startTuto()};
 $("#tutoGo").onclick=()=>{$("#tutoDlg").close();startTuto()};
 $("#tutoSkip").onclick=()=>{$("#tutoDlg").close();try{localStorage.setItem("lixo-tuto-v1","1")}catch(e){}};
-$("#tfJogar").onclick=()=>{$("#tutoFim").close();drawPerfil();show("s0");window.scrollTo(0,0)};
-$("#tfRep").onclick=()=>{$("#tutoFim").close();startTuto()};
+$("#tfJogar").onclick=()=>{$("#tutoFim").close("ok");drawPerfil();show("s0");window.scrollTo(0,0)};
+$("#tfRep").onclick=()=>{$("#tutoFim").close("ok");startTuto()};
 try{if(!localStorage.getItem("lixo-tuto-v1"))setTimeout(()=>{const d=$("#tutoDlg");if(!d.open)d.showModal()},700)}catch(e){}
+$("#tutoFim").addEventListener("close",()=>{
+  const d=$("#tutoFim"),via=d.returnValue;d.returnValue="";
+  if(via!=="ok"&&S&&S.tuto&&!$("#s1").hidden){drawPerfil();show("s0");window.scrollTo(0,0)}
+});
+$("#tutoDlg").addEventListener("close",()=>{try{localStorage.setItem("lixo-tuto-v1","1")}catch(e){}});
 </script>
 </body>
 </html>
